@@ -1,0 +1,83 @@
+# ===============================================================================
+# Git Ignore Configuration for GeoFusion AI
+# ===============================================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints/
+
+# Data Directories (Exclude raw satellite data, processed arrays, and patch files except .gitkeep)
+data/raw/sentinel1/*
+!data/raw/sentinel1/.gitkeep
+data/raw/sentinel2/*
+!data/raw/sentinel2/.gitkeep
+data/raw/labels/*
+!data/raw/labels/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/patches/*
+!data/patches/.gitkeep
+
+# Model Weight Checkpoints (Exclude binary weights except .gitkeep)
+models/*
+!models/.gitkeep
+*.pth
+*.pt
+*.onnx
+*.safetensors
+
+# Output Maps, Graphs, and Reports (Exclude generated artifacts except .gitkeep)
+outputs/maps/*
+!outputs/maps/.gitkeep
+outputs/graphs/*
+!outputs/graphs/.gitkeep
+outputs/reports/*
+!outputs/reports/.gitkeep
+
+# Local Credentials & Secrets
+*.json
+!mcp_config.json
+credentials.json
+.env
