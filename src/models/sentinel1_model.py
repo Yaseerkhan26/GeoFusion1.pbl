@@ -1,74 +1,73 @@
 """
 ===============================================================================
 File: src/models/sentinel1_model.py
-Purpose: PyTorch Feature Extractor Branch for Sentinel-1 Synthetic Aperture Radar (SAR)
+Purpose: Single-Modality Sentinel-1 Baseline Architecture (Sentinel1OnlyNet)
 
 Description:
-    Implements a dedicated Convolutional Neural Network (CNN) encoder branch
-    tailored to process 2-channel Sentinel-1 SAR inputs (VV and VH polarizations).
-    Extracts spatial texture and radar backscatter feature representations.
+    Processes 2-channel Sentinel-1 SAR inputs (VV, VH) through Sentinel1Encoder
+    and a lightweight convolutional classification head to produce pixel-wise
+    land cover predictions [Batch, NUM_CLASSES, 256, 256].
 ===============================================================================
 """
 
+import sys
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+from pathlib import Path
+
+# Append project root to system path for modular imports
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.append(str(BASE_DIR))
+
+from src.models.config import SENTINEL1_CHANNELS, FEATURE_CHANNELS, NUM_CLASSES
+from src.models.sentinel1_encoder import Sentinel1Encoder
 
 
-class Sentinel1Encoder(nn.Module):
+class Sentinel1OnlyNet(nn.Module):
     """
-    Feature Extraction Backbone for Sentinel-1 SAR imagery (VV + VH bands).
+    Single-modality SAR network for semantic segmentation of land cover using Sentinel-1.
     """
 
-    def __init__(self, in_channels=2, feature_dim=128):
+    def __init__(
+        self,
+        in_channels=SENTINEL1_CHANNELS,
+        feature_channels=FEATURE_CHANNELS,
+        num_classes=NUM_CLASSES,
+    ):
         """
         Args:
-            in_channels (int): Number of SAR polarizations (default: 2 -> VV, VH).
-            feature_dim (int): Number of feature map channels output by encoder.
+            in_channels (int): Sentinel-1 SAR input channels (default: 2).
+            feature_channels (int): Encoder output channels (default: 32).
+            num_classes (int): Number of target land cover classes (default: 8).
         """
-        super(Sentinel1Encoder, self).__init__()
-        self.in_channels = in_channels
-        self.feature_dim = feature_dim
+        super(Sentinel1OnlyNet, self).__init__()
 
-        # Convolutional Encoder Backbone Placeholder
-        self.layer1 = nn.Sequential(
-            nn.Conv2d(in_channels, 32, kernel_size=3, padding=1),
-            nn.BatchNorm2d(32),
+        self.num_classes = num_classes
+        self.encoder = Sentinel1Encoder(in_channels=in_channels, out_channels=feature_channels)
+
+        self.classifier = nn.Sequential(
+            nn.Conv2d(feature_channels, 16, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(16),
             nn.ReLU(inplace=True),
-            nn.Conv2d(32, 64, kernel_size=3, padding=1),
-            nn.BatchNorm2d(64),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(2, 2),
+            nn.Conv2d(16, self.num_classes, kernel_size=1),
         )
 
-        self.layer2 = nn.Sequential(
-            nn.Conv2d(64, 128, kernel_size=3, padding=1),
-            nn.BatchNorm2d(128),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(128, feature_dim, kernel_size=3, padding=1),
-            nn.BatchNorm2d(feature_dim),
-            nn.ReLU(inplace=True),
-        )
-
-    def forward(self, x):
+    def forward(self, s1_x):
         """
-        Forward pass for SAR feature extraction.
-
         Args:
-            x (torch.Tensor): SAR input tensor of shape (Batch, 2, Height, Width).
+            s1_x (torch.Tensor): Sentinel-1 tensor of shape [Batch, 2, 256, 256].
 
         Returns:
-            torch.Tensor: Feature map tensor of shape (Batch, feature_dim, H/2, W/2).
+            torch.Tensor: Logits tensor of shape [Batch, NUM_CLASSES, 256, 256].
         """
-        out = self.layer1(x)
-        out = self.layer2(out)
-        return out
+        features = self.encoder(s1_x)
+        logits = self.classifier(features)
+        return logits
 
 
 if __name__ == "__main__":
-    print("=== Sentinel-1 SAR Model Architecture Placeholder ===")
-    dummy_s1 = torch.randn(4, 2, 128, 128)  # Batch of 4, 2 SAR bands, 128x128 image
-    model = Sentinel1Encoder()
-    output = model(dummy_s1)
-    print(f"[TEST] Input shape: {dummy_s1.shape}")
-    print(f"[TEST] Output feature shape: {output.shape}")
+    model = Sentinel1OnlyNet(num_classes=8)
+    dummy_input = torch.randn(2, 2, 256, 256)
+    out = model(dummy_input)
+    print(f"[TEST] Sentinel1OnlyNet Input: {dummy_input.shape} -> Output: {out.shape}")

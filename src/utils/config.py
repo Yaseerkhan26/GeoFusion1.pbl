@@ -23,6 +23,7 @@ RAW_S2_DIR = DATA_DIR / "raw" / "sentinel2"
 RAW_LABELS_DIR = DATA_DIR / "raw" / "labels"
 PROCESSED_DIR = DATA_DIR / "processed"
 PATCHES_DIR = DATA_DIR / "patches"
+SPLITS_DIR = DATA_DIR / "splits"
 
 # Output Directories
 MODELS_DIR = BASE_DIR / "models"
@@ -34,7 +35,7 @@ REPORTS_DIR = OUTPUTS_DIR / "reports"
 # Ensure runtime directories exist
 for path in [
     RAW_S1_DIR, RAW_S2_DIR, RAW_LABELS_DIR, PROCESSED_DIR, PATCHES_DIR,
-    MODELS_DIR, MAPS_DIR, GRAPHS_DIR, REPORTS_DIR
+    SPLITS_DIR, MODELS_DIR, MAPS_DIR, GRAPHS_DIR, REPORTS_DIR
 ]:
     os.makedirs(path, exist_ok=True)
 
@@ -54,8 +55,9 @@ SENTINEL2_BANDS = [
 ]
 
 # Tiling & Data Preprocessing Hyperparameters
-PATCH_SIZE = 128            # Spatial patch dimension (128x128 pixels)
-PATCH_STRIDE = 64           # Overlap stride for patch extraction
+PATCH_SIZE = 256            # Spatial patch dimension (256x256 pixels)
+PATCH_STRIDE = 256          # Non-overlapping patch extraction stride
+MIN_VALID_RATIO = 0.80      # Minimum fraction of valid pixels required per patch
 TARGET_EPSG = "EPSG:4326"   # Standard WGS84 CRS (or target local UTM projection)
 SPATIAL_RESOLUTION = 10.0   # Resampled target resolution (meters)
 
@@ -87,7 +89,7 @@ CLASS_COLORMAP = {
 BATCH_SIZE = 16
 LEARNING_RATE = 1e-4
 WEIGHT_DECAY = 1e-4
-NUM_EPOCHS = 50
+NUM_EPOCHS = 20
 TRAIN_RATIO = 0.7
 VAL_RATIO = 0.15
 TEST_RATIO = 0.15

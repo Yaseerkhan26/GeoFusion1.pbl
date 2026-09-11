@@ -1,75 +1,73 @@
 """
 ===============================================================================
 File: src/models/sentinel2_model.py
-Purpose: PyTorch Feature Extractor Branch for Sentinel-2 Multispectral Optical Data
+Purpose: Single-Modality Sentinel-2 Baseline Architecture (Sentinel2OnlyNet)
 
 Description:
-    Implements a dedicated Convolutional Neural Network (CNN) encoder branch
-    tailored to process 10-channel Sentinel-2 optical/multispectral inputs
-    (Visible, Red Edge, NIR, SWIR bands).
-    Extracts spectral signatures and spatial contextual features.
+    Processes 6-channel Sentinel-2 Optical inputs (B2, B3, B4, B8, B11, B12) through Sentinel2Encoder
+    and a lightweight convolutional classification head to produce pixel-wise
+    land cover predictions [Batch, NUM_CLASSES, 256, 256].
 ===============================================================================
 """
 
+import sys
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+from pathlib import Path
+
+# Append project root to system path for modular imports
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+if str(BASE_DIR) not in sys.path:
+    sys.path.append(str(BASE_DIR))
+
+from src.models.config import SENTINEL2_CHANNELS, FEATURE_CHANNELS, NUM_CLASSES
+from src.models.sentinel2_encoder import Sentinel2Encoder
 
 
-class Sentinel2Encoder(nn.Module):
+class Sentinel2OnlyNet(nn.Module):
     """
-    Feature Extraction Backbone for Sentinel-2 Multispectral imagery (10 bands).
+    Single-modality Optical network for semantic segmentation of land cover using Sentinel-2.
     """
 
-    def __init__(self, in_channels=10, feature_dim=128):
+    def __init__(
+        self,
+        in_channels=SENTINEL2_CHANNELS,
+        feature_channels=FEATURE_CHANNELS,
+        num_classes=NUM_CLASSES,
+    ):
         """
         Args:
-            in_channels (int): Number of optical bands (default: 10).
-            feature_dim (int): Number of feature map channels output by encoder.
+            in_channels (int): Sentinel-2 Optical input channels (default: 6).
+            feature_channels (int): Encoder output channels (default: 32).
+            num_classes (int): Number of target land cover classes (default: 8).
         """
-        super(Sentinel2Encoder, self).__init__()
-        self.in_channels = in_channels
-        self.feature_dim = feature_dim
+        super(Sentinel2OnlyNet, self).__init__()
 
-        # Convolutional Encoder Backbone Placeholder
-        self.layer1 = nn.Sequential(
-            nn.Conv2d(in_channels, 64, kernel_size=3, padding=1),
-            nn.BatchNorm2d(64),
+        self.num_classes = num_classes
+        self.encoder = Sentinel2Encoder(in_channels=in_channels, out_channels=feature_channels)
+
+        self.classifier = nn.Sequential(
+            nn.Conv2d(feature_channels, 16, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(16),
             nn.ReLU(inplace=True),
-            nn.Conv2d(64, 128, kernel_size=3, padding=1),
-            nn.BatchNorm2d(128),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(2, 2),
+            nn.Conv2d(16, self.num_classes, kernel_size=1),
         )
 
-        self.layer2 = nn.Sequential(
-            nn.Conv2d(128, 256, kernel_size=3, padding=1),
-            nn.BatchNorm2d(256),
-            nn.ReLU(inplace=True),
-            nn.Conv2d(256, feature_dim, kernel_size=3, padding=1),
-            nn.BatchNorm2d(feature_dim),
-            nn.ReLU(inplace=True),
-        )
-
-    def forward(self, x):
+    def forward(self, s2_x):
         """
-        Forward pass for optical spectral feature extraction.
-
         Args:
-            x (torch.Tensor): Optical input tensor of shape (Batch, 10, Height, Width).
+            s2_x (torch.Tensor): Sentinel-2 tensor of shape [Batch, 6, 256, 256].
 
         Returns:
-            torch.Tensor: Feature map tensor of shape (Batch, feature_dim, H/2, W/2).
+            torch.Tensor: Logits tensor of shape [Batch, NUM_CLASSES, 256, 256].
         """
-        out = self.layer1(x)
-        out = self.layer2(out)
-        return out
+        features = self.encoder(s2_x)
+        logits = self.classifier(features)
+        return logits
 
 
 if __name__ == "__main__":
-    print("=== Sentinel-2 Optical Model Architecture Placeholder ===")
-    dummy_s2 = torch.randn(4, 10, 128, 128)  # Batch of 4, 10 optical bands, 128x128 image
-    model = Sentinel2Encoder()
-    output = model(dummy_s2)
-    print(f"[TEST] Input shape: {dummy_s2.shape}")
-    print(f"[TEST] Output feature shape: {output.shape}")
+    model = Sentinel2OnlyNet(num_classes=8)
+    dummy_input = torch.randn(2, 6, 256, 256)
+    out = model(dummy_input)
+    print(f"[TEST] Sentinel2OnlyNet Input: {dummy_input.shape} -> Output: {out.shape}")
