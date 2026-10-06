@@ -30,7 +30,7 @@ if str(BASE_DIR) not in sys.path:
     sys.path.append(str(BASE_DIR))
 
 from src.utils.config import BASE_DIR, DATA_DIR
-from src.models.config import PATCH_SIZE, CLASS_MAPPING_PATH
+from src.models.config import PATCH_SIZE, CLASS_MAPPING_PATH, IGNORE_INDEX
 
 
 class MultimodalSatelliteDataset(Dataset):
@@ -38,16 +38,18 @@ class MultimodalSatelliteDataset(Dataset):
     PyTorch Dataset for synchronized multimodal satellite patch triplets.
     """
 
-    def __init__(self, split_csv_path, class_mapping_path=CLASS_MAPPING_PATH, root_dir=BASE_DIR):
+    def __init__(self, split_csv_path, class_mapping_path=CLASS_MAPPING_PATH, root_dir=BASE_DIR, is_train=False):
         """
         Args:
             split_csv_path (str or Path): Path to split CSV file (train.csv, val.csv, or test.csv).
             class_mapping_path (str or Path): Path to class_mapping.json.
             root_dir (str or Path): Root project directory for resolving relative file paths.
+            is_train (bool): Enables safe spatial data augmentations (flips/rotations) if True.
         """
         self.split_csv_path = Path(split_csv_path)
         self.root_dir = Path(root_dir)
         self.class_mapping_path = Path(class_mapping_path)
+        self.is_train = is_train
 
         if not self.split_csv_path.exists():
             raise FileNotFoundError(f"Split CSV file not found at: {self.split_csv_path}")
@@ -68,8 +70,9 @@ class MultimodalSatelliteDataset(Dataset):
         orig_to_model = mapping_data["original_to_model"]
         self.num_classes = mapping_data["num_classes"]
 
-        # Create fast lookup array for mapping ESA WorldCover class IDs (0..255) to model IDs (0..num_classes-1)
-        self.lut = np.zeros(256, dtype=np.int64)
+        # Create fast lookup array for mapping ESA WorldCover class IDs (0..255) to model IDs (0..num_classes-1).
+        # Initialize with IGNORE_INDEX (255) so NoData/unmapped pixels are explicitly ignored.
+        self.lut = np.full(256, IGNORE_INDEX, dtype=np.int64)
         for orig_str, model_idx in orig_to_model.items():
             orig_id = int(orig_str)
             if 0 <= orig_id < 256:
@@ -116,7 +119,25 @@ class MultimodalSatelliteDataset(Dataset):
         s2_tensor = torch.from_numpy(s2_arr).to(torch.float32)
         label_tensor = torch.from_numpy(mapped_label_arr).to(torch.long)
 
+        # Synchronized spatial augmentations for training split only
+        if self.is_train:
+            import random
+            if random.random() > 0.5:
+                s1_tensor = torch.flip(s1_tensor, dims=[2])
+                s2_tensor = torch.flip(s2_tensor, dims=[2])
+                label_tensor = torch.flip(label_tensor, dims=[1])
+            if random.random() > 0.5:
+                s1_tensor = torch.flip(s1_tensor, dims=[1])
+                s2_tensor = torch.flip(s2_tensor, dims=[1])
+                label_tensor = torch.flip(label_tensor, dims=[0])
+            k = random.choice([0, 1, 2, 3])
+            if k > 0:
+                s1_tensor = torch.rot90(s1_tensor, k=k, dims=[1, 2])
+                s2_tensor = torch.rot90(s2_tensor, k=k, dims=[1, 2])
+                label_tensor = torch.rot90(label_tensor, k=k, dims=[0, 1])
+
         return s1_tensor, s2_tensor, label_tensor
+
 
 
 if __name__ == "__main__":

@@ -362,25 +362,55 @@ src/models/
 
 ---
 
-## 📦 Dataset and Large Files
+## 🚀 FusionLand AI — Production Frontend Platform
 
-Large satellite datasets and generated model files are intentionally excluded from the Git repository.
+The project includes the **FusionLand AI** satellite intelligence platform, providing a dark-theme Earth-observation dashboard, real-time georeferencing, uncertainty quantification, and strict evaluation provenance.
 
-Examples include:
+### 1. Installation & Environment Setup
 
-```text
-*.tif
-*.tiff
-*.jp2
-*.h5
-*.nc
-*.pth
-*.pt
+```bash
+# Clone the repository
+git clone https://github.com/Yaseerkhan26/GeoFusion1.git
+cd "GeoFusion AI"
+
+# Install production dependencies
+pip install -r requirements.txt
 ```
 
-These files should be stored separately and are not required to be committed to GitHub.
+### 2. Official Frontend Entry Point
+
+Launch the interactive web application directly with:
+
+```bash
+streamlit run app.py
+```
+
+*(Alternatively: `python -m streamlit run app.py`)*
+
+### 3. Canonical 10 Platform Modules
+
+1. **01 Overview**: Command-center hero dashboard with verified study area bounding coordinates (`EPSG:4326`), natural-color satellite thumbnail, and operational telemetry cards.
+2. **02 Satellite Explorer**: Native resolution (`4112 × 4008`) multi-band raster viewer supporting Sentinel-2 RGB, False Color (NIR), SWIR, individual bands, and Sentinel-1 SAR (VV, VH, VV/VH ratio) with interactive percentile stretch controls.
+3. **03 AI Classification**: Synchronized 256×256 patch inference workspace displaying input modalities, argmax classification map, maximum class confidence (softmax probability), normalized Shannon entropy uncertainty map, uncertainty tier breakdowns, confidence filtering threshold, and side-by-side ground truth agreement analysis.
+4. **04 GIS Map**: Interactive Folium map with Esri Satellite basemap, bounding box polygon, native raster overlay, and an **Affine Pixel Inspector** that converts row/col to real geographic Lat/Lon coordinates and samples band reflectance without hardcoding.
+5. **05 Analytics**: Empirical ground truth class distribution across splits, prediction vs ground truth bar charts, and WGS-84 geodesic area calculations.
+6. **06 Model Performance**: Provenance-protected benchmarking center displaying validated Pixel Accuracy, Weighted Precision, Weighted Recall, Weighted F1, and mIoU. Features per-class IoU charts, confusion matrix (raw/normalized), 20-epoch Colab training curves, and dynamic Model Cards.
+7. **07 Data Quality**: Automated system health matrix with PASS/WARNING/FAIL badges verifying Python/PyTorch/CUDA runtime, GeoTIFF headers, and zero patch ID leakage across dataset splits.
+8. **08 Experiments**: Discovered checkpoint registry tracking SHA-256 hashes, parameter shapes, and on-demand test set benchmark execution.
+9. **09 Reports**: Multi-format scientific report generation (`.txt`, `.md`, `.json`, `.csv`) and georeferenced GeoTIFF prediction export with strict CRS and affine transform preservation.
+10. **10 About**: Remote sensing theoretical rationale (Sentinel-1 C-band microwave vs Sentinel-2 optical), interactive SVG dual-encoder pipeline flow, and real-world sensor limitations.
+
+### 4. Verification & Testing
+
+Execute the automated integration test suite:
+
+```bash
+python -m unittest tests/test_platform.py
+python -m unittest tests/test_ui_flow.py
+```
 
 ---
+
 
 ## 📌 Current Project Status
 

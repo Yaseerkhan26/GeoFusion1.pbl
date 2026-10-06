@@ -60,29 +60,44 @@ PATCH_STRIDE = 256          # Non-overlapping patch extraction stride
 MIN_VALID_RATIO = 0.80      # Minimum fraction of valid pixels required per patch
 TARGET_EPSG = "EPSG:4326"   # Standard WGS84 CRS (or target local UTM projection)
 SPATIAL_RESOLUTION = 10.0   # Resampled target resolution (meters)
+IGNORE_INDEX = 255          # Unclassified / NoData pixel label index
 
-# Land Cover Classification Taxonomy
+# Land Cover Classification Taxonomy (Validated ESA WorldCover 8-Class Mapping)
 CLASSES = {
-    0: "Background / Unclassified",
-    1: "Water Bodies",
-    2: "Built-up / Urban",
-    3: "Dense Forest / Vegetation",
-    4: "Cropland / Agricultural Land",
-    5: "Barren / Bare Soil",
-    6: "Wetlands",
+    0: "Tree cover",
+    1: "Shrubland",
+    2: "Grassland",
+    3: "Cropland",
+    4: "Built-up",
+    5: "Bare / sparse vegetation",
+    6: "Permanent water bodies",
+    7: "Herbaceous wetland",
 }
 
 NUM_CLASSES = len(CLASSES)
 
-# Color Palette for Visualization (Hex codes for Folium / Matplotlib)
+# Original ESA WorldCover numeric IDs
+ESA_WORLDCOVER_IDS = {
+    0: 10,
+    1: 20,
+    2: 30,
+    3: 40,
+    4: 50,
+    5: 60,
+    6: 80,
+    7: 90,
+}
+
+# Color Palette for Visualization (Hex codes matching standard ESA WorldCover legend)
 CLASS_COLORMAP = {
-    0: "#000000",  # Black
-    1: "#1f77b4",  # Blue
-    2: "#d62728",  # Red
-    3: "#2ca02c",  # Green
-    4: "#bcbd22",  # Yellow/Olive
-    5: "#8c564b",  # Brown
-    6: "#9467bd",  # Purple
+    0: "#006400",  # Tree cover (Dark Green)
+    1: "#99cc00",  # Shrubland (Olive Green)
+    2: "#ccff66",  # Grassland (Light Green)
+    3: "#ffff66",  # Cropland (Yellow)
+    4: "#ff0000",  # Built-up (Red)
+    5: "#cccc99",  # Bare / sparse vegetation (Khaki/Sand)
+    6: "#0000ff",  # Permanent water bodies (Blue)
+    7: "#00cccc",  # Herbaceous wetland (Cyan)
 }
 
 # Training Hyperparameters

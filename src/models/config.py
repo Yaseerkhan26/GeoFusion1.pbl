@@ -27,6 +27,7 @@ SENTINEL2_CHANNELS = 6
 PATCH_SIZE = 256
 FEATURE_CHANNELS = 32
 RANDOM_SEED = 42
+IGNORE_INDEX = 255
 
 CLASS_MAPPING_PATH = DATA_DIR / "class_mapping.json"
 
@@ -46,3 +47,4 @@ def load_num_classes():
 
 
 NUM_CLASSES = load_num_classes()
+
