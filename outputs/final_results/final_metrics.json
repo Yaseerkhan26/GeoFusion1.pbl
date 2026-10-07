@@ -1,0 +1,193 @@
+{
+    "checkpoint_name": "GeoFusion_AI_Final.pth",
+    "checkpoint_sha256": "ec9d8370a71f1f9de105d8eab48392ceae64929398fa4b9ae49a1b3c27fc6504",
+    "checkpoint_modified": "2026-09-27 19:48:10",
+    "checkpoint_size_bytes": 149865,
+    "architecture": "MultimodalFusionNet",
+    "dataset_fingerprint": "e3542b76d9758682",
+    "evaluation_timestamp": "2026-09-27 19:49:29",
+    "metrics": {
+        "pixel_accuracy": 0.7183685302734375,
+        "precision_weighted": 0.8333570705901313,
+        "recall_weighted": 0.7183685302734375,
+        "f1_weighted": 0.7642800035557525,
+        "f1_macro": 0.35208203769450536,
+        "miou": 0.2641808815849942,
+        "total_test_pixels": 1900544,
+        "total_raw_pixels": 1900544,
+        "invalid_pixels_ignored": 0,
+        "total_test_patches": 29
+    },
+    "per_class_metrics": [
+        {
+            "Class_ID": 0,
+            "Original_Class_ID": 10,
+            "Class_Name": "Tree cover",
+            "Precision": 0.6542837898518186,
+            "Recall": 0.7311442176939018,
+            "F1": 0.6905819819947914,
+            "IoU": 0.5273961198783842,
+            "Ground_Truth_Pixels": 398578,
+            "Predicted_Pixels": 445400
+        },
+        {
+            "Class_ID": 1,
+            "Original_Class_ID": 20,
+            "Class_Name": "Shrubland",
+            "Precision": 0.15239986939486286,
+            "Recall": 0.255619195399676,
+            "F1": 0.190953488966734,
+            "IoU": 0.1055547703180212,
+            "Ground_Truth_Pixels": 43823,
+            "Predicted_Pixels": 73504
+        },
+        {
+            "Class_ID": 2,
+            "Original_Class_ID": 30,
+            "Class_Name": "Grassland",
+            "Precision": 0.11911852293031566,
+            "Recall": 0.006626685663165568,
+            "F1": 0.012554927809165096,
+            "IoU": 0.006317119393556538,
+            "Ground_Truth_Pixels": 30181,
+            "Predicted_Pixels": 1679
+        },
+        {
+            "Class_ID": 3,
+            "Original_Class_ID": 40,
+            "Class_Name": "Cropland",
+            "Precision": 0.9432715371127995,
+            "Recall": 0.7439425797939228,
+            "F1": 0.8318326094288728,
+            "IoU": 0.7120834018677602,
+            "Ground_Truth_Pixels": 1355899,
+            "Predicted_Pixels": 1069375
+        },
+        {
+            "Class_ID": 4,
+            "Original_Class_ID": 50,
+            "Class_Name": "Built-up",
+            "Precision": 0.5599566288284429,
+            "Recall": 0.78586860545943,
+            "F1": 0.6539516778313649,
+            "IoU": 0.48583075886738986,
+            "Ground_Truth_Pixels": 53229,
+            "Predicted_Pixels": 74704
+        },
+        {
+            "Class_ID": 5,
+            "Original_Class_ID": 60,
+            "Class_Name": "Bare / sparse vegetation",
+            "Precision": 0.005176280839696581,
+            "Recall": 0.23625488842880146,
+            "F1": 0.010130602904040404,
+            "IoU": 0.005091089354318999,
+            "Ground_Truth_Pixels": 4347,
+            "Predicted_Pixels": 198405
+        },
+        {
+            "Class_ID": 6,
+            "Original_Class_ID": 80,
+            "Class_Name": "Permanent water bodies",
+            "Precision": 0.29092170571596304,
+            "Recall": 0.7997945858704424,
+            "F1": 0.42665101262107424,
+            "IoU": 0.27117379300052236,
+            "Ground_Truth_Pixels": 13631,
+            "Predicted_Pixels": 37474
+        },
+        {
+            "Class_ID": 7,
+            "Original_Class_ID": 90,
+            "Class_Name": "Herbaceous wetland",
+            "Precision": 0.0,
+            "Recall": 0.0,
+            "F1": 0.0,
+            "IoU": 0.0,
+            "Ground_Truth_Pixels": 856,
+            "Predicted_Pixels": 3
+        }
+    ],
+    "confusion_matrix": [
+        [
+            291418,
+            8841,
+            152,
+            30235,
+            13861,
+            47976,
+            6095,
+            0
+        ],
+        [
+            8312,
+            11202,
+            458,
+            9288,
+            3012,
+            6212,
+            5339,
+            0
+        ],
+        [
+            1049,
+            3410,
+            200,
+            17586,
+            3544,
+            3424,
+            966,
+            2
+        ],
+        [
+            142223,
+            49019,
+            557,
+            1008711,
+            11228,
+            132248,
+            11912,
+            1
+        ],
+        [
+            1561,
+            942,
+            66,
+            2554,
+            41831,
+            6176,
+            99,
+            0
+        ],
+        [
+            128,
+            37,
+            76,
+            510,
+            743,
+            1027,
+            1826,
+            0
+        ],
+        [
+            647,
+            45,
+            112,
+            309,
+            454,
+            1162,
+            10902,
+            0
+        ],
+        [
+            62,
+            8,
+            58,
+            182,
+            31,
+            180,
+            335,
+            0
+        ]
+    ]
+}

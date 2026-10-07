@@ -1,0 +1,43 @@
+{
+    "original_to_model": {
+        "10": 0,
+        "20": 1,
+        "30": 2,
+        "40": 3,
+        "50": 4,
+        "60": 5,
+        "80": 6,
+        "90": 7
+    },
+    "model_to_original": {
+        "0": 10,
+        "1": 20,
+        "2": 30,
+        "3": 40,
+        "4": 50,
+        "5": 60,
+        "6": 80,
+        "7": 90
+    },
+    "class_legend": {
+        "0": "Tree cover",
+        "1": "Shrubland",
+        "2": "Grassland",
+        "3": "Cropland",
+        "4": "Built-up",
+        "5": "Bare / sparse vegetation",
+        "6": "Permanent water bodies",
+        "7": "Herbaceous wetland"
+    },
+    "num_classes": 8,
+    "unique_original_classes": [
+        10,
+        20,
+        30,
+        40,
+        50,
+        60,
+        80,
+        90
+    ]
+}

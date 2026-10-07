@@ -1,0 +1,49 @@
+===============================================================================
+FUSIONLAND AI: GROUND TRUTH LABEL PREPARATION REPORT (STAGE 4A)
+===============================================================================
+
+1. INPUT & REFERENCE PATHS:
+   - Input Raw ESA WorldCover Label File: D:\GeoFusion AI\data\raw\labels\worldcover_gee_raw.tif
+   - Reference Sentinel Raster File:      D:\GeoFusion AI\data\processed\sentinel1\sentinel1_processed.tif
+   - Output Processed Label File Path:    D:\GeoFusion AI\data\processed\labels\worldcover_labels.tif
+
+2. ORIGINAL RAW LABEL RASTER METADATA:
+   - Input File Name:      worldcover_gee_raw.tif
+   - Original Band Count:  1
+   - Original CRS:         EPSG:4326
+   - Original Dimensions:  4113 x 4008
+   - Original Resolution:  (0.000090, 0.000090)
+   - Original Bounds:      BoundingBox(left=75.73848874009985, bottom=14.284021501256099, right=76.10796581645822, top=14.644066267131203)
+   - Original Data Type:   uint8
+   - Original NoData:      0.0
+   - Unique Class Values:  [np.uint8(10), np.uint8(20), np.uint8(30), np.uint8(40), np.uint8(50), np.uint8(60), np.uint8(80), np.uint8(90)]
+
+3. ALIGNMENT & RESAMPLING DETAILS:
+   - Reprojection Required: True
+   - Resampling Required:   True
+   - Resampling Method:     NEAREST NEIGHBOR (Resampling.nearest)
+   - Class Integrity:       Categorical Integer IDs Preserved (No float/interpolation)
+
+4. FINAL PROCESSED LABEL RASTER METADATA:
+   - Final CRS:            EPSG:4326
+   - Final Dimensions:     4112 x 4008
+   - Final Resolution:     (0.000090, 0.000090)
+   - Final Bounds:         BoundingBox(left=75.73857857162827, bottom=14.284021501256099, right=76.10796581645822, top=14.644066267131203)
+   - Output Data Type:     uint8 (Integer)
+   - Output File Path:     D:\GeoFusion AI\data\processed\labels\worldcover_labels.tif
+
+5. PROCESSED LABEL CLASS DISTRIBUTION:
+   Class ID | Class Name                | Pixel Count  | Percentage
+   ----------------------------------------------------------------
+   10       | Tree cover                 | 2,923,025    | 17.74%
+   20       | Shrubland                  | 882,225      | 5.35%
+   30       | Grassland                  | 415,732      | 2.52%
+   40       | Cropland                   | 11,371,492   | 69.00%
+   50       | Built-up                   | 663,072      | 4.02%
+   60       | Bare / sparse vegetation   | 65,749       | 0.40%
+   80       | Permanent water bodies     | 152,417      | 0.92%
+   90       | Herbaceous wetland         | 7,184        | 0.04%
+
+===============================================================================
+[SUCCESS] Stage 4A Label preparation report complete.
+===============================================================================

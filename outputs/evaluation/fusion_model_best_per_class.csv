@@ -1,0 +1,9 @@
+Class_ID,Original_Class_ID,Class_Name,IoU,Ground_Truth_Pixels,Predicted_Pixels
+0,10,Tree cover,0.0012109603191118622,398578,762
+1,20,Shrubland,0.0,43823,0
+2,30,Grassland,0.0,30181,5
+3,40,Cropland,0.21770996171993234,1355899,353918
+4,50,Built-up,0.0,53229,0
+5,60,Bare / sparse vegetation,0.001861249274989323,4347,532850
+6,80,Permanent water bodies,0.0,13631,0
+7,90,Herbaceous wetland,0.0002269061348513025,856,1013009

@@ -250,7 +250,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--checkpoint",
         type=str,
-        default="models/fusion_colab_best.pth",
+        default="models/GeoFusion_AI_Final.pth",
         help="Path to checkpoint .pth file",
     )
     parser.add_argument("--device", type=str, default=None, help="Device (cpu or cuda)")

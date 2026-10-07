@@ -1,0 +1,77 @@
+===============================================================================
+FUSIONLAND AI: MULTIMODAL AI MODEL ARCHITECTURE REPORT (STAGE 5)
+===============================================================================
+
+1. PROJECT & MODEL SPECIFICATIONS:
+   - Project Name:              FusionLand AI
+   - Model Name:                MultimodalFusionNet
+   - Sentinel-1 Input Channels: 2 (VV, VH)
+   - Sentinel-2 Input Channels: 6 (B2, B3, B4, B8, B11, B12)
+   - Patch Spatial Size:        256 x 256
+   - Feature Map Depth:         32 channels per encoder
+   - Number of Target Classes:  8 (Automatically detected)
+   - Fusion Method:             Feature-level Concatenation (64 channels)
+   - Output Type:               Pixel-wise land-cover classification logits
+   - Activation Function:       Linear (No Softmax inside model; raw logits returned)
+
+2. MODEL PARAMETER COUNT:
+   - Total Parameters:          33,832
+   - Trainable Parameters:      33,832
+
+3. TENSOR SHAPE SUMMARY:
+   - Sentinel-1 Input Tensor:  [Batch, 2, 256, 256]
+   - Sentinel-2 Input Tensor:  [Batch, 6, 256, 256]
+   - Sentinel-1 Encoder Output:[Batch, 32, 256, 256]
+   - Sentinel-2 Encoder Output:[Batch, 32, 256, 256]
+   - Fused Feature Map Tensor: [Batch, 64, 256, 256]
+   - Final Classification Output: [Batch, 8, 256, 256]
+   - Ground Truth Label Tensor:[Batch, 256, 256]
+
+4. CLASS MAPPING DETAILS:
+   Model ID | Original ESA ID | Class Description
+   --------------------------------------------------------------
+   0        | 10              | Tree cover
+   1        | 20              | Shrubland
+   2        | 30              | Grassland
+   3        | 40              | Cropland
+   4        | 50              | Built-up
+   5        | 60              | Bare / sparse vegetation
+   6        | 80              | Permanent water bodies
+   7        | 90              | Herbaceous wetland
+
+5. DETAILED ARCHITECTURE SUMMARY:
+MultimodalFusionNet(
+  (s1_encoder): Sentinel1Encoder(
+    (encoder): Sequential(
+      (0): Conv2d(2, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, bias=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+      (3): Conv2d(16, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (4): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, bias=True, track_running_stats=True)
+      (5): ReLU(inplace=True)
+    )
+  )
+  (s2_encoder): Sentinel2Encoder(
+    (encoder): Sequential(
+      (0): Conv2d(6, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, bias=True, track_running_stats=True)
+      (2): ReLU(inplace=True)
+      (3): Conv2d(16, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+      (4): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, bias=True, track_running_stats=True)
+      (5): ReLU(inplace=True)
+    )
+  )
+  (classifier): Sequential(
+    (0): Conv2d(64, 32, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, bias=True, track_running_stats=True)
+    (2): ReLU(inplace=True)
+    (3): Conv2d(32, 16, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+    (4): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, bias=True, track_running_stats=True)
+    (5): ReLU(inplace=True)
+    (6): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+  )
+)
+
+===============================================================================
+[SUCCESS] Stage 5 Model Architecture report generated successfully.
+===============================================================================

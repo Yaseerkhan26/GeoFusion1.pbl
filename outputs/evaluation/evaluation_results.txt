@@ -1,0 +1,9 @@
+Evaluation Results on Test Set (Model: GeoFusion_AI_Final.pth)
+============================================================
+Checkpoint SHA-256: ec9d8370a71f1f9de105d8eab48392ceae64929398fa4b9ae49a1b3c27fc6504
+Dataset Fingerprint: e3542b76d9758682
+Pixel Accuracy:     0.7184
+Precision:          0.8334
+Recall:             0.7184
+F1-score:           0.7643
+mIoU:               0.2642

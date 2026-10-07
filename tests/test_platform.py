@@ -76,7 +76,7 @@ class TestFusionLandAI(unittest.TestCase):
 
     def test_checkpoint_provenance(self):
         """Verify checkpoint discovery, metadata extraction, and SHA-256."""
-        ckpt_path = BASE_DIR / "models" / "fusion_colab_best.pth"
+        ckpt_path = BASE_DIR / "models" / "GeoFusion_AI_Final.pth"
         self.assertTrue(ckpt_path.exists())
 
         meta = get_checkpoint_metadata(ckpt_path)
@@ -96,7 +96,7 @@ class TestFusionLandAI(unittest.TestCase):
     def test_inference_and_uncertainty(self):
         """Verify inference output, probability bounds, and entropy normalization."""
         model = MultimodalFusionNet(num_classes=8)
-        ckpt_path = BASE_DIR / "models" / "fusion_colab_best.pth"
+        ckpt_path = BASE_DIR / "models" / "GeoFusion_AI_Final.pth"
         model.load_state_dict(torch.load(ckpt_path, map_location="cpu"))
 
         dummy_s1 = torch.randn(2, 256, 256)
@@ -148,8 +148,8 @@ class TestFusionLandAI(unittest.TestCase):
         self.assertIn("Sentinel-1", src_desc)
 
     def test_evaluation_freshness(self):
-        """Verify evaluation status, provenance, and structural metric integrity for fusion_colab_best.pth."""
-        ckpt_path = BASE_DIR / "models" / "fusion_colab_best.pth"
+        """Verify evaluation status, provenance, and structural metric integrity for GeoFusion_AI_Final.pth."""
+        ckpt_path = BASE_DIR / "models" / "GeoFusion_AI_Final.pth"
         status, eval_data = load_evaluation_for_checkpoint(ckpt_path)
         self.assertEqual(status, "VALIDATED")
         self.assertIsNotNone(eval_data)
@@ -195,7 +195,7 @@ class TestFusionLandAI(unittest.TestCase):
     def test_inference_numerical_safety(self):
         """Verify that inference rejects NaNs and invalid shapes safely."""
         model = MultimodalFusionNet(num_classes=8)
-        ckpt_path = BASE_DIR / "models" / "fusion_colab_best.pth"
+        ckpt_path = BASE_DIR / "models" / "GeoFusion_AI_Final.pth"
         model.load_state_dict(torch.load(ckpt_path, map_location="cpu"))
 
         # NaN injection
@@ -212,7 +212,7 @@ class TestFusionLandAI(unittest.TestCase):
     def test_uncertainty_tiers(self):
         """Verify uncertainty tier breakdown counts and percentages."""
         model = MultimodalFusionNet(num_classes=8)
-        ckpt_path = BASE_DIR / "models" / "fusion_colab_best.pth"
+        ckpt_path = BASE_DIR / "models" / "GeoFusion_AI_Final.pth"
         model.load_state_dict(torch.load(ckpt_path, map_location="cpu"))
 
         s1 = torch.randn(2, 256, 256)

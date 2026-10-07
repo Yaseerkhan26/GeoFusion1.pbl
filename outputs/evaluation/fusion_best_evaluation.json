@@ -1,0 +1,167 @@
+{
+    "checkpoint_name": "fusion_best.pth",
+    "checkpoint_sha256": "8a7537b6e81bfbc81037662adfde1c015347efc1d51ae3fa3367321c71a166db",
+    "checkpoint_modified": "2026-09-09 15:25:30",
+    "checkpoint_size_bytes": 149601,
+    "architecture": "MultimodalFusionNet",
+    "dataset_fingerprint": "e3542b76d9758682",
+    "evaluation_timestamp": "2026-09-22 11:06:54",
+    "metrics": {
+        "pixel_accuracy": 0.18020051101158405,
+        "precision_weighted": 0.8527394439075823,
+        "recall_weighted": 0.18020051101158405,
+        "f1_weighted": 0.27513070027539155,
+        "f1_macro": 0.053471938200037594,
+        "miou": 0.03242942265665996,
+        "total_test_pixels": 1900544,
+        "total_test_patches": 29
+    },
+    "per_class_metrics": [
+        {
+            "Class_ID": 0,
+            "Original_Class_ID": 10,
+            "Class_Name": "Tree cover",
+            "IoU": 0.002839377042683462,
+            "Ground_Truth_Pixels": 398578,
+            "Predicted_Pixels": 1233
+        },
+        {
+            "Class_ID": 1,
+            "Original_Class_ID": 20,
+            "Class_Name": "Shrubland",
+            "IoU": 0.0,
+            "Ground_Truth_Pixels": 43823,
+            "Predicted_Pixels": 0
+        },
+        {
+            "Class_ID": 2,
+            "Original_Class_ID": 30,
+            "Class_Name": "Grassland",
+            "IoU": 0.0,
+            "Ground_Truth_Pixels": 30181,
+            "Predicted_Pixels": 0
+        },
+        {
+            "Class_ID": 3,
+            "Original_Class_ID": 40,
+            "Class_Name": "Cropland",
+            "IoU": 0.23681190628902485,
+            "Ground_Truth_Pixels": 1355899,
+            "Predicted_Pixels": 354529
+        },
+        {
+            "Class_ID": 4,
+            "Original_Class_ID": 50,
+            "Class_Name": "Built-up",
+            "IoU": 0.011237492985121614,
+            "Ground_Truth_Pixels": 53229,
+            "Predicted_Pixels": 20651
+        },
+        {
+            "Class_ID": 5,
+            "Original_Class_ID": 60,
+            "Class_Name": "Bare / sparse vegetation",
+            "IoU": 0.0,
+            "Ground_Truth_Pixels": 4347,
+            "Predicted_Pixels": 0
+        },
+        {
+            "Class_ID": 6,
+            "Original_Class_ID": 80,
+            "Class_Name": "Permanent water bodies",
+            "IoU": 0.008546604936449752,
+            "Ground_Truth_Pixels": 13631,
+            "Predicted_Pixels": 1524099
+        },
+        {
+            "Class_ID": 7,
+            "Original_Class_ID": 90,
+            "Class_Name": "Herbaceous wetland",
+            "IoU": 0.0,
+            "Ground_Truth_Pixels": 856,
+            "Predicted_Pixels": 32
+        }
+    ],
+    "confusion_matrix": [
+        [
+            1132,
+            0,
+            0,
+            3731,
+            9330,
+            0,
+            384381,
+            4
+        ],
+        [
+            11,
+            0,
+            0,
+            4603,
+            283,
+            0,
+            38924,
+            2
+        ],
+        [
+            0,
+            0,
+            0,
+            12441,
+            204,
+            0,
+            17536,
+            0
+        ],
+        [
+            64,
+            0,
+            0,
+            327495,
+            9891,
+            0,
+            1018427,
+            22
+        ],
+        [
+            0,
+            0,
+            0,
+            4714,
+            821,
+            0,
+            47690,
+            4
+        ],
+        [
+            0,
+            0,
+            0,
+            932,
+            23,
+            0,
+            3392,
+            0
+        ],
+        [
+            3,
+            0,
+            0,
+            503,
+            94,
+            0,
+            13031,
+            0
+        ],
+        [
+            23,
+            0,
+            0,
+            110,
+            5,
+            0,
+            718,
+            0
+        ]
+    ]
+}

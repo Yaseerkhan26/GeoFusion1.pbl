@@ -1,0 +1,32 @@
+MULTIMODAL SATELLITE DATASET INSPECTION REPORT
+===============================================================================
+
+1. Number of Bands:
+   - Sentinel-1 (SAR): 2 bands ('VV', 'VH')
+   - Sentinel-2 (Optical): 6 bands ('B2', 'B3', 'B4', 'B8', 'B11', 'B12')
+
+2. Spatial Dimensions (Width x Height):
+   - Sentinel-1: 4112 x 4008 pixels
+   - Sentinel-2: 4112 x 4008 pixels
+
+3. Coordinate Reference System (CRS) & Affine Transform:
+   - Sentinel-1 CRS: EPSG:4326
+   - Sentinel-1 Transform:
+     | 0.00, 0.00, 75.74|
+| 0.00,-0.00, 14.64|
+| 0.00, 0.00, 1.00|
+   - Sentinel-2 CRS: EPSG:4326
+   - Sentinel-2 Transform:
+     | 0.00, 0.00, 75.74|
+| 0.00,-0.00, 14.64|
+| 0.00, 0.00, 1.00|
+
+4. Spatial Dimensions Match Check:
+   - Same Dimensions? PASSED (YES)
+   - Details: S1=(4112, 4008) | S2=(4112, 4008)
+
+5. Geographic Alignment Check:
+   - Same CRS? YES
+   - Same Transform Matrix? YES
+   - Same Bounding Box? YES
+   - Geographically Aligned for Fusion? PASSED (YES)

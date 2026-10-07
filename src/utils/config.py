@@ -28,6 +28,8 @@ SPLITS_DIR = DATA_DIR / "splits"
 # Output Directories
 MODELS_DIR = BASE_DIR / "models"
 OUTPUTS_DIR = BASE_DIR / "outputs"
+FINAL_RESULTS_DIR = OUTPUTS_DIR / "final_results"
+TRAINING_OUTPUTS_DIR = OUTPUTS_DIR / "training"
 MAPS_DIR = OUTPUTS_DIR / "maps"
 GRAPHS_DIR = OUTPUTS_DIR / "graphs"
 REPORTS_DIR = OUTPUTS_DIR / "reports"
@@ -35,7 +37,7 @@ REPORTS_DIR = OUTPUTS_DIR / "reports"
 # Ensure runtime directories exist
 for path in [
     RAW_S1_DIR, RAW_S2_DIR, RAW_LABELS_DIR, PROCESSED_DIR, PATCHES_DIR,
-    SPLITS_DIR, MODELS_DIR, MAPS_DIR, GRAPHS_DIR, REPORTS_DIR
+    SPLITS_DIR, MODELS_DIR, FINAL_RESULTS_DIR, TRAINING_OUTPUTS_DIR, MAPS_DIR, GRAPHS_DIR, REPORTS_DIR
 ]:
     os.makedirs(path, exist_ok=True)
 
@@ -90,15 +92,19 @@ ESA_WORLDCOVER_IDS = {
 
 # Color Palette for Visualization (Hex codes matching standard ESA WorldCover legend)
 CLASS_COLORMAP = {
-    0: "#006400",  # Tree cover (Dark Green)
-    1: "#99cc00",  # Shrubland (Olive Green)
-    2: "#ccff66",  # Grassland (Light Green)
-    3: "#ffff66",  # Cropland (Yellow)
-    4: "#ff0000",  # Built-up (Red)
-    5: "#cccc99",  # Bare / sparse vegetation (Khaki/Sand)
-    6: "#0000ff",  # Permanent water bodies (Blue)
-    7: "#00cccc",  # Herbaceous wetland (Cyan)
+    0: "#1E5631",  # Tree cover (Green)
+    1: "#4C9A2A",  # Shrubland (Light/Dark Green)
+    2: "#ACD870",  # Grassland (Yellow-Green)
+    3: "#E5B636",  # Cropland (Agricultural Yellow/Orange)
+    4: "#808080",  # Built-up (Gray)
+    5: "#A0826C",  # Bare / sparse vegetation (Brown)
+    6: "#0066CC",  # Permanent water bodies (Blue)
+    7: "#00A896",  # Herbaceous wetland (Cyan)
 }
+
+# Default Checkpoint & Evaluation Paths
+DEFAULT_MODEL_PATH = MODELS_DIR / "GeoFusion_AI_Final.pth"
+DEFAULT_EVAL_PATH = FINAL_RESULTS_DIR / "final_metrics.json"
 
 # Training Hyperparameters
 BATCH_SIZE = 16
@@ -112,3 +118,4 @@ RANDOM_SEED = 42
 
 # Device Configuration
 DEVICE = "cuda"  # Will fallback to "cpu" dynamically in PyTorch scripts if CUDA is unavailable
+

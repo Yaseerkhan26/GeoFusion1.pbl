@@ -1,372 +1,90 @@
-# Multimodal Satellite Data Fusion for Enhanced Land Cover Classification Using Sentinel-1 and Sentinel-2
+# GeoFusion AI — Multimodal Satellite Intelligence Platform
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge\&logo=python\&logoColor=white)
-![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?style=for-the-badge\&logo=pytorch\&logoColor=white)
-![Google Earth Engine](https://img.shields.io/badge/Google%20Earth%20Engine-Data%20Acquisition-2EA44F?style=for-the-badge\&logo=google-earth\&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?style=for-the-badge\&logo=streamlit\&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)
+![Google Earth Engine](https://img.shields.io/badge/Google%20Earth%20Engine-Data%20Acquisition-2EA44F?style=for-the-badge&logo=google-earth&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+
+---
 
 ## 📌 Project Overview
 
-**GeoFusion AI** is a final-year engineering project focused on **multimodal satellite data fusion for enhanced land cover classification**.
+**GeoFusion AI** is a production-grade Earth-Observation and Land-Cover Segmentation platform that fuses co-registered **Sentinel-1 SAR** (microwave radar) and **Sentinel-2 Optical** (multispectral) satellite imagery for 8-class land cover classification mapped to the ESA WorldCover taxonomy.
 
-The project combines:
-
-* **Sentinel-1 SAR** data using VV and VH polarizations
-* **Sentinel-2 multispectral optical** data
-* Deep learning-based feature extraction
-* Multimodal fusion for semantic segmentation
-* Google Earth Engine for satellite data acquisition
-* PyTorch for model development and training
-
-Sentinel-2 provides rich spectral information for identifying vegetation, water bodies, agricultural areas, and urban structures. However, optical imagery can be affected by cloud cover, haze, and illumination conditions.
-
-Sentinel-1 Synthetic Aperture Radar (SAR) can operate under cloudy and rainy conditions and provides complementary information related to surface structure and moisture.
-
-GeoFusion AI combines these complementary modalities to improve land-cover classification.
+### Key Modalities & Fusion Logic
+* **Sentinel-1 SAR**: Dual polarizations (`VV`, `VH`) penetrate cloud cover and provide structural and soil moisture backscatter signatures.
+* **Sentinel-2 Optical**: 6 multispectral bands (`B02 Blue`, `B03 Green`, `B04 Red`, `B08 NIR`, `B11 SWIR-1`, `B12 SWIR-2`) capture rich vegetation and surface reflectance properties.
+* **Multimodal Fusion**: Dual-stream deep neural network (`MultimodalFusionNet`) extracts feature representations independently via custom S1 and S2 encoders before concatenating feature depths (64 channels) for spatial land-cover segmentation with Shannon entropy uncertainty estimation.
 
 ---
 
-## 🎯 Project Objectives
+## 🎯 Target Land-Cover Taxonomy (8 ESA WorldCover Classes)
 
-1. Acquire Sentinel-1 and Sentinel-2 satellite imagery.
-2. Preprocess and align multimodal satellite data.
-3. Generate spatially aligned training patches.
-4. Prepare land-cover labels.
-5. Extract features independently from Sentinel-1 and Sentinel-2.
-6. Fuse the extracted multimodal features.
-7. Train a semantic segmentation model.
-8. Evaluate the classification performance using standard metrics.
-9. Prepare outputs for visualization and analysis.
-
----
-
-## 🛰️ Satellite Data
-
-### Sentinel-1
-
-The Sentinel-1 branch uses:
-
-* **VV polarization**
-* **VH polarization**
-
-Sentinel-1 provides SAR information that is useful even when optical imagery is affected by clouds.
-
-### Sentinel-2
-
-The Sentinel-2 branch uses multispectral optical information, including the project's selected 10/20 m bands.
-
-Sentinel-2 provides spectral information useful for distinguishing different land-cover classes.
+| Class ID | Land Cover Name | Hex Color | Description |
+|---|---|---|---|
+| **0** | Tree cover | `#1E5631` | Dense or sparse tree foliage and forest land |
+| **1** | Shrubland | `#4C9A2A` | Low woody vegetation and shrubs |
+| **2** | Grassland | `#ACD870` | Natural herbaceous vegetation and pasture |
+| **3** | Cropland | `#E5B636` | Cultivated agricultural land and seasonal crops |
+| **4** | Built-up | `#808080` | Man-made structures, urban infrastructure, roads |
+| **5** | Bare / sparse vegetation | `#A0826C` | Unvegetated soil, rocks, and sand |
+| **6** | Permanent water bodies | `#0066CC` | Rivers, lakes, reservoirs, and open water |
+| **7** | Herbaceous wetland | `#00A896` | Seasonally or permanently flooded vegetation |
 
 ---
 
-## 🧠 Model Architecture
-
-The project uses a multimodal deep-learning architecture consisting of separate feature extraction branches for Sentinel-1 and Sentinel-2 followed by feature fusion and segmentation.
+## 🧠 Model Architecture & Pipeline
 
 ```text
-                 Satellite Data
-                       │
-          ┌────────────┴────────────┐
-          │                         │
-     Sentinel-1                 Sentinel-2
-       SAR Data                 Optical Data
-      VV + VH                    Multispectral
-          │                         │
-          ▼                         ▼
-   Sentinel-1 Encoder       Sentinel-2 Encoder
-          │                         │
-          └────────────┬────────────┘
-                       │
-                       ▼
-                Feature Fusion
-                       │
-                       ▼
-              Fusion Segmentation
-                    Model
-                       │
-                       ▼
-              Land Cover Map
+               Co-Registered Satellite Inputs
+                             │
+            ┌────────────────┴────────────────┐
+            │                                 │
+    Sentinel-1 SAR                    Sentinel-2 Optical
+     [Batch, 2, 256, 256]            [Batch, 6, 256, 256]
+            │                                 │
+            ▼                                 ▼
+    Sentinel1Encoder                  Sentinel2Encoder
+    (2 -> 16 -> 32)                   (6 -> 16 -> 32)
+            │                                 │
+            └────────────────┬────────────────┘
+                             │
+                             ▼
+                    Concatenated Features
+                    [Batch, 64, 256, 256]
+                             │
+                             ▼
+                    Fusion Classifier
+                  [Batch, 8, 256, 256]
+                             │
+                             ▼
+            Softmax Probabilities & Uncertainty
 ```
 
-The existing fusion architecture is implemented in:
-
-```text
-src/models/fusion_model.py
-```
+### Class Imbalance Handling
+- Natural ground cover distribution in the Tungabhadra basin study area is heavily dominated by Tree cover and Cropland (>90% of area).
+- Gradient update stability during training is achieved using **Weighted Cross-Entropy Loss** calculated on valid non-background pixels (`IGNORE_INDEX = 255` excluded).
 
 ---
 
-## 🛠️ Technology Stack
+## 📊 Final Model & Benchmark Performance
 
-| Technology          | Purpose                    |
-| ------------------- | -------------------------- |
-| Python 3.10+        | Core programming           |
-| PyTorch             | Deep learning              |
-| Torchvision         | Computer vision utilities  |
-| Google Earth Engine | Satellite data acquisition |
-| Rasterio            | Raster processing          |
-| GeoPandas           | Geospatial processing      |
-| Shapely             | Geometry operations        |
-| NumPy               | Numerical processing       |
-| SciPy               | Scientific computing       |
-| Pandas              | Data processing            |
-| Scikit-learn        | Evaluation metrics         |
-| Matplotlib          | Visualization              |
-| Streamlit           | Web application            |
-| Folium              | Interactive maps           |
+- **Final Trained Model**: `models/GeoFusion_AI_Final.pth` (149.8 KB)
+- **Evaluation Dataset**: `data/splits/test.csv` (29 isolated test patches, 1,848,220 valid test pixels)
+
+| Metric | Measured Value | Scope / Notes |
+|---|---|---|
+| **Pixel Accuracy** | `70.38%` | Evaluated on valid non-background test pixels |
+| **Weighted Precision** | `0.8232` | Zero-division safe weighted macro precision |
+| **Weighted Recall** | `0.7038` | Sensitivity across ground truth classes |
+| **Weighted F1-Score** | `0.7395` | Harmonic mean across classes |
+| **Mean IoU (mIoU)** | `0.2127` | Macro mean Intersection over Union across 8 classes |
 
 ---
 
-## 📂 Project Structure
+## 🚀 Installation & Running the Application
 
-```text
-GeoFusion AI/
-│
-├── data/
-│   ├── raw/
-│   │   ├── sentinel1/
-│   │   ├── sentinel2/
-│   │   └── labels/
-│   │
-│   ├── processed/
-│   └── splits/
-│
-├── src/
-│   │
-│   ├── data/
-│   │   ├── create_patches.py
-│   │   ├── create_splits.py
-│   │   ├── download_worldcover.py
-│   │   ├── gee_data_fusion.js
-│   │   ├── inspect_data.py
-│   │   ├── prepare_labels.py
-│   │   ├── preprocess.py
-│   │   ├── validate_labels.py
-│   │   ├── validate_patches.py
-│   │   └── validate_preprocessing.py
-│   │
-│   ├── models/
-│   │   ├── config.py
-│   │   ├── create_class_mapping.py
-│   │   ├── dataset.py
-│   │   ├── fusion_model.py
-│   │   ├── sentinel1_encoder.py
-│   │   ├── sentinel1_model.py
-│   │   ├── sentinel2_encoder.py
-│   │   ├── sentinel2_model.py
-│   │   ├── test_model.py
-│   │   └── validate_model.py
-│   │
-│   ├── training/
-│   │   ├── check_stage6_completion.py
-│   │   ├── dataset.py
-│   │   ├── train.py
-│   │   ├── trainer.py
-│   │   └── validate_training.py
-│   │
-│   └── utils/
-│       └── config.py
-│
-├── check_data.py
-├── colab_train_fusion.py
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
-
----
-
-## 📄 Important Files
-
-| File                                | Purpose                            |
-| ----------------------------------- | ---------------------------------- |
-| `src/data/preprocess.py`            | Satellite data preprocessing       |
-| `src/data/create_patches.py`        | Creates spatial training patches   |
-| `src/data/create_splits.py`         | Creates dataset splits             |
-| `src/data/prepare_labels.py`        | Prepares land-cover labels         |
-| `src/models/sentinel1_encoder.py`   | Sentinel-1 feature extraction      |
-| `src/models/sentinel2_encoder.py`   | Sentinel-2 feature extraction      |
-| `src/models/sentinel1_model.py`     | Sentinel-1 model                   |
-| `src/models/sentinel2_model.py`     | Sentinel-2 model                   |
-| `src/models/fusion_model.py`        | Multimodal fusion architecture     |
-| `src/training/train.py`             | Training pipeline                  |
-| `src/training/trainer.py`           | Training utilities                 |
-| `src/training/validate_training.py` | Training validation                |
-| `colab_train_fusion.py`             | Google Colab Fusion model training |
-| `check_data.py`                     | Dataset checking and validation    |
-
----
-
-## 🔄 Project Pipeline
-
-```text
-Sentinel-1
-   │
-   ├── VV
-   └── VH
-        │
-        ▼
-   SAR Preprocessing
-        │
-        ▼
-   Sentinel-1 Features
-        │
-        │
-        ├──────────────┐
-        │              │
-        │              ▼
-        │         Feature Fusion
-        │              ▲
-        │              │
-        │        Sentinel-2 Features
-        │              ▲
-        │              │
-        ▼              │
-   Sentinel-1      Sentinel-2
-                    │
-                    ▼
-              Optical Processing
-                    │
-                    ▼
-             Multispectral Data
-
-                    │
-                    ▼
-             Fusion Network
-                    │
-                    ▼
-          Land Cover Classification
-                    │
-                    ▼
-             Prediction Map
-```
-
----
-
-## 🚀 Installation
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/Yaseerkhan26/GeoFusion1.pbl.git
-cd GeoFusion1.pbl
-```
-
-### 2. Create a virtual environment
-
-```bash
-python -m venv venv
-```
-
-### 3. Activate the environment
-
-**Windows:**
-
-```bash
-venv\Scripts\activate
-```
-
-**Linux/macOS:**
-
-```bash
-source venv/bin/activate
-```
-
-### 4. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## 🛰️ Google Earth Engine
-
-Google Earth Engine can be used for satellite data acquisition.
-
-Authenticate using:
-
-```bash
-earthengine authenticate
-```
-
-The project includes:
-
-```text
-src/data/gee_data_fusion.js
-```
-
-for Google Earth Engine data processing/acquisition workflows.
-
----
-
-## 🧪 Data Processing
-
-The general processing workflow is:
-
-```text
-Satellite Data
-      │
-      ▼
-Data Validation
-      │
-      ▼
-Preprocessing
-      │
-      ▼
-Label Preparation
-      │
-      ▼
-Patch Generation
-      │
-      ▼
-Dataset Splitting
-      │
-      ▼
-Model Training
-```
-
----
-
-## 🧠 Stage 6 — Fusion Model Training
-
-The final fusion model is intended to be trained using **Google Colab GPU** rather than relying on a low-resource local machine.
-
-The repository contains:
-
-```text
-colab_train_fusion.py
-```
-
-which provides the training workflow for the final multimodal fusion model.
-
-The training process uses the prepared Sentinel-1 and Sentinel-2 datasets and the existing fusion architecture.
-
----
-
-## 📊 Evaluation
-
-The project can evaluate land-cover classification using metrics such as:
-
-* Overall Accuracy
-* Cohen's Kappa
-* Intersection over Union (IoU)
-* Confusion Matrix
-
-Evaluation and validation utilities are included in:
-
-```text
-src/training/
-src/models/
-```
-
----
-
-## 🚀 FusionLand AI — Production Frontend Platform
-
-The project includes the **FusionLand AI** satellite intelligence platform, providing a dark-theme Earth-observation dashboard, real-time georeferencing, uncertainty quantification, and strict evaluation provenance.
-
-### 1. Installation & Environment Setup
+### 1. Environment Setup
 
 ```bash
 # Clone the repository
@@ -377,72 +95,175 @@ cd "GeoFusion AI"
 pip install -r requirements.txt
 ```
 
-### 2. Official Frontend Entry Point
+### 2. Launch Streamlit Web Application
 
-Launch the interactive web application directly with:
+Launch the application directly with either command:
 
+```bash
+streamlit run app/app.py
+```
+*or*
 ```bash
 streamlit run app.py
 ```
 
-*(Alternatively: `python -m streamlit run app.py`)*
+### 3. Run Verification Test Suite
 
-### 3. Canonical 10 Platform Modules
-
-1. **01 Overview**: Command-center hero dashboard with verified study area bounding coordinates (`EPSG:4326`), natural-color satellite thumbnail, and operational telemetry cards.
-2. **02 Satellite Explorer**: Native resolution (`4112 × 4008`) multi-band raster viewer supporting Sentinel-2 RGB, False Color (NIR), SWIR, individual bands, and Sentinel-1 SAR (VV, VH, VV/VH ratio) with interactive percentile stretch controls.
-3. **03 AI Classification**: Synchronized 256×256 patch inference workspace displaying input modalities, argmax classification map, maximum class confidence (softmax probability), normalized Shannon entropy uncertainty map, uncertainty tier breakdowns, confidence filtering threshold, and side-by-side ground truth agreement analysis.
-4. **04 GIS Map**: Interactive Folium map with Esri Satellite basemap, bounding box polygon, native raster overlay, and an **Affine Pixel Inspector** that converts row/col to real geographic Lat/Lon coordinates and samples band reflectance without hardcoding.
-5. **05 Analytics**: Empirical ground truth class distribution across splits, prediction vs ground truth bar charts, and WGS-84 geodesic area calculations.
-6. **06 Model Performance**: Provenance-protected benchmarking center displaying validated Pixel Accuracy, Weighted Precision, Weighted Recall, Weighted F1, and mIoU. Features per-class IoU charts, confusion matrix (raw/normalized), 20-epoch Colab training curves, and dynamic Model Cards.
-7. **07 Data Quality**: Automated system health matrix with PASS/WARNING/FAIL badges verifying Python/PyTorch/CUDA runtime, GeoTIFF headers, and zero patch ID leakage across dataset splits.
-8. **08 Experiments**: Discovered checkpoint registry tracking SHA-256 hashes, parameter shapes, and on-demand test set benchmark execution.
-9. **09 Reports**: Multi-format scientific report generation (`.txt`, `.md`, `.json`, `.csv`) and georeferenced GeoTIFF prediction export with strict CRS and affine transform preservation.
-10. **10 About**: Remote sensing theoretical rationale (Sentinel-1 C-band microwave vs Sentinel-2 optical), interactive SVG dual-encoder pipeline flow, and real-world sensor limitations.
-
-### 4. Verification & Testing
-
-Execute the automated integration test suite:
+Run all automated unit and integration tests:
 
 ```bash
-python -m unittest tests/test_platform.py
-python -m unittest tests/test_ui_flow.py
+python -m unittest discover -s tests -p "test_*.py"
 ```
 
 ---
 
-
-## 📌 Current Project Status
-
-The project repository contains the data-processing, model, validation, and training components required for the GeoFusion multimodal satellite-data-fusion pipeline.
-
-The final Fusion model training workflow is available through:
+## 📁 Final Project Structure
 
 ```text
-colab_train_fusion.py
+GeoFusion AI/
+│
+├── app/
+│   ├── app.py                     # Primary Streamlit Application logic & page router
+│   ├── templates/                 # HTML templates
+│   └── static/
+│       ├── css/
+│       │   └── style.css          # Dark satellite theme CSS stylesheet
+│       ├── js/                    # JavaScript assets
+│       └── images/                # App static images
+│
+├── src/
+│   ├── models/
+│   │   ├── fusion_model.py        # MultimodalFusionNet PyTorch architecture
+│   │   ├── sentinel1_encoder.py   # Sentinel-1 SAR encoder module
+│   │   ├── sentinel2_encoder.py   # Sentinel-2 Optical encoder module
+│   │   ├── dataset.py             # MultimodalSatelliteDataset PyTorch loader
+│   │   ├── config.py              # Architecture hyperparameters & NUM_CLASSES
+│   │   └── inference.py           # Inference, uncertainty & error map functions
+│   │
+│   ├── training/
+│   │   └── trainer.py             # Model trainer class & training loops
+│   │
+│   ├── evaluation/
+│   │   └── evaluate.py            # Evaluation suite & test set metrics calculation
+│   │
+│   ├── geospatial/
+│   │   └── geo_utils.py           # Georeferencing, raster IO, geodesic area calc
+│   │
+│   └── utils/
+│       ├── auth.py                # User authentication, hashing & session manager
+│       ├── config.py              # Centralized paths, color palettes & constants
+│       ├── provenance.py          # SHA-256 fingerprinting & evaluation loader
+│       └── ui_components.py       # Custom dark UI cards, legends & components
+│
+├── models/
+│   └── GeoFusion_AI_Final.pth     # Authoritative trained PyTorch model weights
+│
+├── data/
+│   ├── patches/
+│   │   ├── sentinel1/             # 179 Sentinel-1 SAR patch arrays (.npy)
+│   │   ├── sentinel2/             # 179 Sentinel-2 Optical patch arrays (.npy)
+│   │   └── labels/                # 179 ESA WorldCover ground truth patches (.npy)
+│   ├── splits/
+│   │   ├── train.csv              # 125 Training patches
+│   │   ├── val.csv                # 25 Validation patches
+│   │   └── test.csv               # 29 Test patches (strictly isolated)
+│   ├── class_mapping.json         # 8-Class ESA taxonomy mapping
+│   └── users.json                 # Secure user authentication database
+│
+├── outputs/
+│   ├── final_results/             # Confusion matrix, per-class metrics & summary
+│   └── training/                  # Loss/accuracy curves & training history
+│
+├── tests/                         # Complete automated unit test suite
+│   ├── test_model.py
+│   ├── test_inference.py
+│   ├── test_auth.py
+│   ├── test_platform.py
+│   └── test_ui_flow.py
+│
+├── notebooks/
+│   └── fusion_training_colab.ipynb# Colab GPU training notebook
+│
+├── requirements.txt               # Dependency specifications
+├── README.md                      # Project documentation
+├── PROJECT_AUDIT_REPORT.md        # Scientific audit & verification report
+├── PROJECT_CLEANUP_PLAN.md        # Detailed project cleanup plan
+├── .gitignore                     # Git tracking exclusions
+├── app.py                         # Authoritative pass-through root entry point
+└── colab_train_fusion.py          # Google Colab GPU training script
 ```
 
 ---
 
-## 🎓 Academic Project
+## 🚀 DEPLOYMENT ON RENDER
 
-**Project Title:**
-Multimodal Satellite Data Fusion for Enhanced Land Cover Classification Using Sentinel-1 and Sentinel-2
+GeoFusion AI is fully configured for production web deployment on [Render](https://render.com) as a Streamlit Web Service.
 
-**Domain:**
-Remote Sensing · Geospatial Data Science · Deep Learning · Computer Vision
+### 1. GitHub Repository Requirements
+- Push all project source files (`app/`, `src/`, `models/`, `data/class_mapping.json`, `data/users.json`, `requirements.txt`, `.python-version`, `render.yaml`) to your GitHub repository.
+- Ensure `models/GeoFusion_AI_Final.pth` (149.8 KB) is committed to the repository.
 
-**Project Type:**
-Final-Year Engineering Project
+### 2. Render Service Type
+- **Service Type**: Web Service
+- **Environment / Runtime**: Python 3
+- **Region**: Any (e.g., Oregon, USA / Frankfurt, Germany)
+- **Plan**: Free or Starter (>= 512 MB RAM recommended)
+
+### 3. Build Command
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Start Command
+```bash
+streamlit run app/app.py --server.address 0.0.0.0 --server.port $PORT
+```
+
+### 5. Environment Variables
+Configure the following in the Render Dashboard (**Environment** section):
+| Variable Name | Required | Default / Description |
+|---|---|---|
+| `PORT` | Auto-provided | Set dynamically by Render |
+| `PYTHON_VERSION` | Yes | `3.11.9` |
+| `GEOFUSION_SECRET_KEY` | Recommended | Random secret string for session security |
+| `GEOFUSION_ADMIN_EMAIL` | Optional | `admin@geofusion.ai` |
+| `GEOFUSION_ADMIN_PASSWORD` | Optional | Custom admin password override |
+
+### 6. Python Version
+- **Version**: `3.11.9` (Specified via `.python-version` and `render.yaml`).
+
+### 7. Model Location & Architecture
+- **Model Checkpoint**: `models/GeoFusion_AI_Final.pth` (149.8 KB)
+- **Architecture**: `MultimodalFusionNet(num_classes=8)`
+- Fused dual-stream SAR (Sentinel-1) and Optical (Sentinel-2) neural network.
+
+### 8. How to Deploy Step-by-Step
+1. Log in to [Render Dashboard](https://dashboard.render.com).
+2. Click **New +** -> **Web Service**.
+3. Connect your GitHub repository containing **GeoFusion AI**.
+4. Render will automatically detect `render.yaml` or fill manually:
+   - **Name**: `geofusion-ai`
+   - **Runtime**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `streamlit run app/app.py --server.address 0.0.0.0 --server.port $PORT`
+5. Click **Create Web Service**.
+
+### 9. How to Redeploy After GitHub Changes
+- **Automatic Redeploy**: Any commit pushed to the `main` branch triggers an automatic rebuild and zero-downtime redeploy on Render.
+- **Manual Redeploy**: Click **Manual Deploy** -> **Deploy latest commit** inside the Render Dashboard.
+
+### 10. Troubleshooting
+- **Model Loading Error**: Ensure `models/GeoFusion_AI_Final.pth` exists in the repository.
+- **Port Binding Failure**: Ensure the start command uses `$PORT` and `--server.address 0.0.0.0`.
+- **Memory Limit / Out-of-Memory**: Streamlit resource caching (`@st.cache_resource`) prevents reloading the model across reruns.
+- **Login Credentials**: Initial accounts can be registered via the UI or configured using `GEOFUSION_ADMIN_EMAIL` and `GEOFUSION_ADMIN_PASSWORD` environment variables.
 
 ---
 
-## 👨‍💻 Author
+## 🎓 Academic & Project Metadata
 
-**Yaseer Khan**
+* **Project Title**: Multimodal Satellite Data Fusion for Enhanced Land Cover Classification Using Sentinel-1 and Sentinel-2
+* **Domain**: Remote Sensing · Geospatial Data Science · Deep Learning · Computer Vision
+* **Author**: Yaseer Khan
+* **License**: Academic & Educational Open Source Research
 
----
-
-## 📜 License
-
-This project is developed for academic and educational purposes.

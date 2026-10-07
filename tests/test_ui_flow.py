@@ -21,7 +21,7 @@ from src.utils.provenance import load_evaluation_for_checkpoint, get_all_checkpo
 class TestUIFlow(unittest.TestCase):
 
     def setUp(self):
-        self.active_ckpt = "fusion_colab_best.pth"
+        self.active_ckpt = "GeoFusion_AI_Final.pth"
         self.ckpt_path = BASE_DIR / "models" / self.active_ckpt
         self.eval_status, self.eval_data = load_evaluation_for_checkpoint(self.ckpt_path)
         self.model, self.err = app.load_model_from_checkpoint(self.active_ckpt)

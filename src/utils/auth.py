@@ -16,7 +16,7 @@ from typing import Any, Dict, Optional, Tuple
 # Base Directory & User Store Location
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 USERS_FILE = BASE_DIR / "data" / "users.json"
-SECRET_KEY = os.environ.get("GEOFUSION_SECRET_KEY", "geofusion_secure_jwt_session_secret_2026_key")
+SECRET_KEY = os.environ.get("GEOFUSION_SECRET_KEY") or os.urandom(32).hex()
 
 # PBKDF2 Configuration
 HASH_ALGORITHM = "sha256"
@@ -25,22 +25,24 @@ SALT_SIZE = 16
 
 
 def _ensure_users_file():
-    """Ensures the users JSON data store exists with a default admin user if empty."""
+    """Ensures the users JSON data store exists with an optional admin user if environment variables are provided."""
     USERS_FILE.parent.mkdir(parents=True, exist_ok=True)
     if not USERS_FILE.exists() or USERS_FILE.stat().st_size == 0:
-        # Create default admin user: admin@geofusion.ai / Admin@12345
-        salt = os.urandom(SALT_SIZE).hex()
-        password_hash = hash_password("Admin@12345", salt)
-        default_users = {
-            "admin@geofusion.ai": {
+        admin_email = os.environ.get("GEOFUSION_ADMIN_EMAIL")
+        admin_password = os.environ.get("GEOFUSION_ADMIN_PASSWORD")
+        default_users = {}
+        if admin_email and admin_password:
+            clean_email = admin_email.strip().lower()
+            salt = os.urandom(SALT_SIZE).hex()
+            password_hash = hash_password(admin_password, salt)
+            default_users[clean_email] = {
                 "full_name": "GeoFusion Admin",
-                "email": "admin@geofusion.ai",
+                "email": clean_email,
                 "password_hash": password_hash,
                 "salt": salt,
                 "role": "admin",
                 "created_at": time.strftime("%Y-%m-%d %H:%M:%S"),
             }
-        }
         with open(USERS_FILE, "w", encoding="utf-8") as f:
             json.dump(default_users, f, indent=4)
 

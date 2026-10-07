@@ -1,0 +1,167 @@
+{
+    "checkpoint_name": "fusion_model_best.pth",
+    "checkpoint_sha256": "38abafa2dd4cce82faf86692a239a00f063107a2f33e72ed3ce6d90d1774058b",
+    "checkpoint_modified": "2026-09-08 21:47:11",
+    "checkpoint_size_bytes": 149865,
+    "architecture": "MultimodalFusionNet",
+    "dataset_fingerprint": "e3542b76d9758682",
+    "evaluation_timestamp": "2026-09-21 13:17:11",
+    "metrics": {
+        "pixel_accuracy": 0.16174474255792026,
+        "precision_weighted": 0.7491487474478395,
+        "recall_weighted": 0.16174474255792026,
+        "f1_weighted": 0.2556180005896644,
+        "f1_macro": 0.04552013163293143,
+        "miou": 0.027626134681110602,
+        "total_test_pixels": 1900544,
+        "total_test_patches": 29
+    },
+    "per_class_metrics": [
+        {
+            "Class_ID": 0,
+            "Original_Class_ID": 10,
+            "Class_Name": "Tree cover",
+            "IoU": 0.0012109603191118622,
+            "Ground_Truth_Pixels": 398578,
+            "Predicted_Pixels": 762
+        },
+        {
+            "Class_ID": 1,
+            "Original_Class_ID": 20,
+            "Class_Name": "Shrubland",
+            "IoU": 0.0,
+            "Ground_Truth_Pixels": 43823,
+            "Predicted_Pixels": 0
+        },
+        {
+            "Class_ID": 2,
+            "Original_Class_ID": 30,
+            "Class_Name": "Grassland",
+            "IoU": 0.0,
+            "Ground_Truth_Pixels": 30181,
+            "Predicted_Pixels": 5
+        },
+        {
+            "Class_ID": 3,
+            "Original_Class_ID": 40,
+            "Class_Name": "Cropland",
+            "IoU": 0.21770996171993234,
+            "Ground_Truth_Pixels": 1355899,
+            "Predicted_Pixels": 353918
+        },
+        {
+            "Class_ID": 4,
+            "Original_Class_ID": 50,
+            "Class_Name": "Built-up",
+            "IoU": 0.0,
+            "Ground_Truth_Pixels": 53229,
+            "Predicted_Pixels": 0
+        },
+        {
+            "Class_ID": 5,
+            "Original_Class_ID": 60,
+            "Class_Name": "Bare / sparse vegetation",
+            "IoU": 0.001861249274989323,
+            "Ground_Truth_Pixels": 4347,
+            "Predicted_Pixels": 532850
+        },
+        {
+            "Class_ID": 6,
+            "Original_Class_ID": 80,
+            "Class_Name": "Permanent water bodies",
+            "IoU": 0.0,
+            "Ground_Truth_Pixels": 13631,
+            "Predicted_Pixels": 0
+        },
+        {
+            "Class_ID": 7,
+            "Original_Class_ID": 90,
+            "Class_Name": "Herbaceous wetland",
+            "IoU": 0.0002269061348513025,
+            "Ground_Truth_Pixels": 856,
+            "Predicted_Pixels": 1013009
+        }
+    ],
+    "confusion_matrix": [
+        [
+            483,
+            0,
+            0,
+            13737,
+            0,
+            62032,
+            0,
+            322326
+        ],
+        [
+            8,
+            0,
+            0,
+            7969,
+            0,
+            17664,
+            0,
+            18182
+        ],
+        [
+            2,
+            0,
+            0,
+            12200,
+            0,
+            11058,
+            0,
+            6921
+        ],
+        [
+            262,
+            0,
+            0,
+            305692,
+            0,
+            417062,
+            0,
+            632883
+        ],
+        [
+            3,
+            0,
+            5,
+            3731,
+            0,
+            22510,
+            0,
+            26980
+        ],
+        [
+            0,
+            0,
+            0,
+            1982,
+            0,
+            998,
+            0,
+            1367
+        ],
+        [
+            4,
+            0,
+            0,
+            8186,
+            0,
+            1321,
+            0,
+            4120
+        ],
+        [
+            0,
+            0,
+            0,
+            421,
+            0,
+            205,
+            0,
+            230
+        ]
+    ]
+}

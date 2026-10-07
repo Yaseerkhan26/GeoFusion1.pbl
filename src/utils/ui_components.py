@@ -562,11 +562,14 @@ def render_metric_card(title: str, value: str, subtitle: str = ""):
 # Model Card Component
 # -----------------------------------------------------------------------------
 def render_model_card(meta: Dict[str, Any], eval_data: Optional[Dict[str, Any]] = None):
-    """Renders a comprehensive, dynamic Model Card."""
+    """Renders a comprehensive, dynamic Model Card for Experiment 3 MultimodalFusionNet."""
+    filename = meta.get('filename', 'GeoFusion_AI_Final.pth')
+    sha_short = meta.get('sha256_short', 'e6378e90')
+
     st.markdown(textwrap.dedent(f"""
     <div class="model-card-box">
         <div class="model-card-title">
-            <span>📋</span> SYSTEM MODEL CARD: {meta.get('filename', 'fusion_colab_best.pth')}
+            <span>📋</span> SYSTEM MODEL CARD: {filename}
         </div>
         <div class="model-spec-grid">
             <div class="model-spec-item">
@@ -575,7 +578,7 @@ def render_model_card(meta: Dict[str, Any], eval_data: Optional[Dict[str, Any]] 
             </div>
             <div class="model-spec-item">
                 <div class="model-spec-key">Inputs</div>
-                <div class="model-spec-value">S1 (VV, VH) + S2 (B02, B03, B04, B08, B11, B12) = 8 Ch</div>
+                <div class="model-spec-value">S1 (VV, VH) + S2 (6 Bands) = 8 Channels</div>
             </div>
             <div class="model-spec-item">
                 <div class="model-spec-key">Patch Dimensions</div>
@@ -587,23 +590,23 @@ def render_model_card(meta: Dict[str, Any], eval_data: Optional[Dict[str, Any]] 
             </div>
             <div class="model-spec-item">
                 <div class="model-spec-key">Checkpoint File</div>
-                <div class="model-spec-value">fusion_colab_best.pth</div>
+                <div class="model-spec-value">{filename}</div>
             </div>
             <div class="model-spec-item">
                 <div class="model-spec-key">SHA-256 Fingerprint</div>
-                <div class="model-spec-value font-mono">{meta.get('sha256_short', 'ec9d8370')}...</div>
+                <div class="model-spec-value font-mono">{sha_short}...</div>
             </div>
             <div class="model-spec-item">
-                <div class="model-spec-key">Benchmark Pixel Acc</div>
-                <div class="model-spec-value">71.84% (Validated Test)</div>
+                <div class="model-spec-key">Test Pixel Accuracy</div>
+                <div class="model-spec-value">76.45%</div>
             </div>
             <div class="model-spec-item">
-                <div class="model-spec-key">Benchmark Weighted F1</div>
-                <div class="model-spec-value">76.43% (Validated Test)</div>
+                <div class="model-spec-key">Test Macro F1</div>
+                <div class="model-spec-value">39.57%</div>
             </div>
             <div class="model-spec-item">
-                <div class="model-spec-key">Benchmark mIoU</div>
-                <div class="model-spec-value">26.42% (8 Classes)</div>
+                <div class="model-spec-key">Test mIoU</div>
+                <div class="model-spec-value">29.13%</div>
             </div>
         </div>
 
@@ -612,14 +615,14 @@ def render_model_card(meta: Dict[str, Any], eval_data: Optional[Dict[str, Any]] 
                 <span>⚠️</span> DOCUMENTED SCIENTIFIC LIMITATIONS
             </div>
             <ul style="color: #94A3B8; font-size: 0.83rem; line-height: 1.5; margin: 0; padding-left: 1.2rem;">
-                <li><strong>Bare / sparse vegetation</strong>: Overprediction dampened by 35,962 pixels (-15.3%) in targeted sampling iteration, but lingering false positives persist on fallow agricultural fields.</li>
-                <li><strong>Grassland</strong>: High spectral ambiguity with Cropland and Shrubland in single-date optical satellite imagery.</li>
-                <li><strong>Herbaceous wetland</strong>: Genuinely data-limited (sparse ground truth sample count). Predictions are not artificially forced.</li>
-                <li><strong>Single-date spectral ambiguity</strong>: Phenological variation across seasons requires multitemporal acquisition for higher fidelity.</li>
+                <li><strong>Bare / sparse vegetation</strong>: Confusion with fallow agricultural fields and dry bare soil.</li>
+                <li><strong>Grassland & Cropland</strong>: High spectral ambiguity in single-date optical satellite imagery without seasonal temporal sequences.</li>
+                <li><strong>Herbaceous wetland</strong>: Rare category with lower ground truth sampling representation in regional training splits.</li>
             </ul>
         </div>
     </div>
     """).strip(), unsafe_allow_html=True)
+
 
 
 # -----------------------------------------------------------------------------

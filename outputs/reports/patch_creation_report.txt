@@ -1,0 +1,50 @@
+===============================================================================
+FUSIONLAND AI: MULTIMODAL PATCH CREATION & SPLITTING REPORT (STAGE 4B)
+===============================================================================
+
+1. INPUT DATASET PARAMETERS:
+   - Input Dimensions:         4112 x 4008
+   - Input Coordinate Reference: EPSG:4326
+   - Target Patch Size:        256 x 256 pixels
+   - Minimum Valid Pixel Ratio: 80%
+   - Random Seed for Splitting: 42
+
+2. PATCH EXTRACTION SUMMARY:
+   - Total Possible Patches:   240
+   - Total Accepted Patches:   179
+   - Total Rejected Patches:   61
+   - Sentinel-1 Patch Count:   179
+   - Sentinel-2 Patch Count:   179
+   - Ground Truth Label Count: 179
+
+3. PATCH MODALITY SPECIFICATIONS:
+   - Sentinel-1 (SAR):
+       Format: NumPy (.npy)
+       Shape:  (2, 256, 256)
+       Dtype:  float32
+       Bands:  VV, VH
+   - Sentinel-2 (Optical):
+       Format: NumPy (.npy)
+       Shape:  (6, 256, 256)
+       Dtype:  float32
+       Bands:  B2, B3, B4, B8, B11, B12
+   - ESA WorldCover Labels:
+       Format: NumPy (.npy)
+       Shape:  (256, 256)
+       Dtype:  uint8 (Integer)
+
+4. DATASET SPLIT SUMMARY (SPATIAL BLOCK PARTITION):
+   - Training Set:   125   patches (69.83%)
+   - Validation Set: 25    patches (13.97%)
+   - Testing Set:    29    patches (16.20%)
+   - Total Splitted: 179   patches (100.00%)
+
+5. SPLIT FILE LOCATIONS:
+   - Metadata CSV:     D:\GeoFusion AI\data\patches\patch_metadata.csv
+   - Training CSV:     D:\GeoFusion AI\data\splits\train.csv
+   - Validation CSV:   D:\GeoFusion AI\data\splits\val.csv
+   - Testing CSV:      D:\GeoFusion AI\data\splits\test.csv
+
+===============================================================================
+[SUCCESS] Stage 4B patch creation and splitting report generated successfully.
+===============================================================================

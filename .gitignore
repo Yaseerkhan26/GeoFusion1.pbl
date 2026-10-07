@@ -8,9 +8,6 @@ __pycache__/
 *$py.class
 *.so
 
-# C extensions
-*.so
-
 # Distribution / packaging
 .Python
 build/
@@ -44,11 +41,17 @@ venv.bak/
 *.swo
 *~
 .DS_Store
+GeoFusion1.pbl/
 
 # Jupyter Notebook Checkpoints
 .ipynb_checkpoints/
 
-# Data Directories (Exclude raw satellite data, processed arrays, and patch files except .gitkeep)
+# Zip Archives & Large Temporary Files
+*.zip
+*.tar.gz
+*.7z
+
+# Data Directories
 data/raw/sentinel1/*
 !data/raw/sentinel1/.gitkeep
 data/raw/sentinel2/*
@@ -57,27 +60,22 @@ data/raw/labels/*
 !data/raw/labels/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
-data/patches/*
-!data/patches/.gitkeep
 
-# Model Weight Checkpoints (Exclude binary weights except .gitkeep)
-models/*
+# Keep Dataset Splits & Class Mapping Tracked
+!data/class_mapping.json
+!data/users.json
+!data/splits/*.csv
+
+# Model Checkpoints (Keep Final Model Tracked)
+!models/GeoFusion_AI_Final.pth
 !models/.gitkeep
-*.pth
-*.pt
-*.onnx
-*.safetensors
 
-# Output Maps, Graphs, and Reports (Exclude generated artifacts except .gitkeep)
+# Output Maps & Graphs
 outputs/maps/*
 !outputs/maps/.gitkeep
-outputs/graphs/*
-!outputs/graphs/.gitkeep
-outputs/reports/*
-!outputs/reports/.gitkeep
 
 # Local Credentials & Secrets
-*.json
-!mcp_config.json
 credentials.json
 .env
+.env.*
+!.env.example

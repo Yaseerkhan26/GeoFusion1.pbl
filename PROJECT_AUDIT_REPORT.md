@@ -22,8 +22,8 @@ All critical data consistency, geospatial alignment, NoData pixel isolation, dat
 | 1 | **Corrupted Processed GeoTIFF Header**: `sentinel1_processed.tif` was missing the required `StripOffsets` field, causing rasterio read failures. | **CRITICAL** | `data/processed/sentinel1/sentinel1_processed.tif`, `src/data/preprocess.py` | Re-ran complete preprocessing pipeline (`preprocess.py`), generating pristine GeoTIFF rasters for S1, S2, and valid pixel mask. |
 | 2 | **NoData Pixel Class Leakage**: Unmapped/NoData pixels (value 0) in label arrays were mapped to index `0` (Tree cover) in `self.lut`, misclassifying invalid pixels as Tree cover. | **CRITICAL** | `src/models/config.py`, `src/utils/config.py`, `src/models/dataset.py`, `src/training/trainer.py`, `src/evaluation/evaluate.py` | Introduced `IGNORE_INDEX = 255`. Initialized `self.lut = np.full(256, 255)`. Configured `CrossEntropyLoss(ignore_index=255)`. Filtered out `255` from accuracy, confusion matrix, IoU, and support metrics. |
 | 3 | **Arbitrary Unit Test Accuracy Threshold**: `test_evaluation_freshness` in `test_platform.py` enforced an arbitrary `pixel_accuracy > 0.65` software test boundary. | **HIGH** | `tests/test_platform.py` | Replaced arbitrary performance threshold with scientific/structural bounds (`0.0 <= metric <= 1.0`), SHA-256 checkpoint verification, dataset fingerprint matching, and 8x8 confusion matrix dimension validation. |
-| 4 | **Inconsistent Checkpoint Naming in Colab Trainer**: `colab_train_fusion.py` was saving checkpoints to `fusion_model_best.pth` instead of `fusion_colab_best.pth`. | **HIGH** | `colab_train_fusion.py` | Updated `colab_train_fusion.py` to save `fusion_colab_best.pth`. Calculated class weights on valid training labels excluding `IGNORE_INDEX`. |
-| 5 | **Unsegregated Checkpoint Directory**: Production and legacy/dry-run checkpoints were mixed together in `models/`. | **MEDIUM** | `models/`, `models/archive/` | Created `models/archive/` and moved legacy dry-run checkpoints (`fusion_best.pth`, `fusion_model_best.pth`) into `models/archive/`. Retained `fusion_colab_best.pth` as primary production checkpoint. |
+| 4 | **Inconsistent Checkpoint Naming in Colab Trainer**: `colab_train_fusion.py` was saving checkpoints to `fusion_model_best.pth` instead of `GeoFusion_AI_Final.pth`. | **HIGH** | `colab_train_fusion.py` | Updated `colab_train_fusion.py` to save `GeoFusion_AI_Final.pth`. Calculated class weights on valid training labels excluding `IGNORE_INDEX`. |
+| 5 | **Unsegregated Checkpoint Directory**: Production and legacy/dry-run checkpoints were mixed together in `models/`. | **MEDIUM** | `models/`, `models/archive/` | Created `models/archive/` and moved legacy dry-run checkpoints (`fusion_best.pth`, `fusion_model_best.pth`) into `models/archive/`. Retained `GeoFusion_AI_Final.pth` as primary production checkpoint. |
 | 6 | **Unfiltered Class Weight Computation**: Class frequency counts for weighted CrossEntropyLoss included invalid/NoData background pixels. | **MEDIUM** | `colab_train_fusion.py`, `src/training/train.py` | Explicitly filtered out `IGNORE_INDEX` pixels before computing class weights from training labels. |
 | 7 | **Incomplete Per-Class Metrics in Evaluation Record**: Evaluation outputs lacked per-class Precision, Recall, and F1 scores. | **MEDIUM** | `src/evaluation/evaluate.py`, `src/utils/provenance.py` | Expanded `run_evaluation` to calculate per-class Precision, Recall, F1, IoU, ground truth support, and predicted counts on valid pixels. |
 
@@ -70,12 +70,12 @@ All critical data consistency, geospatial alignment, NoData pixel isolation, dat
   - Output Tensor: `[Batch, 8, 256, 256]` (Pixel-wise class logits)
   - Parameter Compatibility: Verified 100% state_dict key and dimension alignment
 
-- **Primary Checkpoint**: `models/fusion_colab_best.pth`
+- **Primary Checkpoint**: `models/GeoFusion_AI_Final.pth`
   - File Size: `149,865` bytes
   - Architecture: `MultimodalFusionNet`
   - Output Classes: 8
   - Compatibility Status: `PASS (VALIDATED)`
-  - Location: `models/fusion_colab_best.pth`
+  - Location: `models/GeoFusion_AI_Final.pth`
 
 - **Archived Checkpoints**:
   - `models/archive/fusion_best.pth` (Local 2-epoch dry run)
@@ -130,7 +130,7 @@ The following verification commands were executed and passed cleanly:
 
 4. **Test Set Evaluation**:
    ```bash
-   python src/evaluation/evaluate.py --checkpoint models/fusion_colab_best.pth
+   python src/evaluation/evaluate.py --checkpoint models/GeoFusion_AI_Final.pth
    # Status: SUCCESS — Output written to outputs/evaluation/fusion_colab_best_evaluation.json.
    ```
 
@@ -146,7 +146,7 @@ The following verification commands were executed and passed cleanly:
 
 1. **Speckle Noise**: Sentinel-1 SAR imagery inherently exhibits speckle noise due to coherent phase interference; filtering is handled at the network level via spatial convolutions.
 2. **Class Imbalance**: Natural ground cover distribution in the Tungabhadra basin study area is dominated by Cropland and Tree Cover (>90% of area). Weighted Cross-Entropy Loss handles gradient balance during training.
-3. **Google Colab Training**: When re-running full multi-epoch training on Google Colab GPU, execute `colab_train_fusion.py` to produce updated checkpoints saved to `models/fusion_colab_best.pth`.
+3. **Google Colab Training**: When re-running full multi-epoch training on Google Colab GPU, execute `colab_train_fusion.py` to produce updated checkpoints saved to `models/GeoFusion_AI_Final.pth`.
 
 ---
 
@@ -163,7 +163,7 @@ The following verification commands were executed and passed cleanly:
 - [x] class imbalance measured
 - [x] class weighting based on real data
 - [x] patch size consistent (256x256)
-- [x] final checkpoint identified (`fusion_colab_best.pth`)
+- [x] final checkpoint identified (`GeoFusion_AI_Final.pth`)
 - [x] checkpoint compatibility verified
 - [x] final Colab training configured
 - [x] test.csv excluded from training

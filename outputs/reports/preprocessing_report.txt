@@ -1,0 +1,43 @@
+===============================================================================
+FUSIONLAND AI: DATA PREPROCESSING AND VALIDATION REPORT (STAGE 3)
+===============================================================================
+
+1. INPUT FILES & PATHS:
+   - Sentinel-1 Raw: D:\GeoFusion AI\data\raw\sentinel1\Sentinel1_VV_VH.tif
+   - Sentinel-2 Raw: D:\GeoFusion AI\data\raw\sentinel2\Sentinel2_Bands.tif
+
+2. PROCESSED OUTPUT LOCATIONS:
+   - Sentinel-1 Processed: D:\GeoFusion AI\data\processed\sentinel1\sentinel1_processed.tif
+   - Sentinel-2 Processed: D:\GeoFusion AI\data\processed\sentinel2\sentinel2_processed.tif
+   - Combined Valid Pixel Mask: D:\GeoFusion AI\data\processed\masks\valid_pixel_mask.tif
+
+3. COMBINED MASK PIXEL COUNT & COVERAGE:
+   - Total Pixels:   16,480,896
+   - Valid Pixels:   12,858,772 (78.02%)
+   - Invalid Pixels: 3,622,124 (21.98%)
+
+4. SENTINEL-1 BAND STATISTICS & NORMALIZATION PARAMETERS:
+   Band | Valid Pixels | Invalid Pixels | Min Value | Max Value | Mean | Std | 1st Pct (Lower) | 99th Pct (Upper) | Norm Range
+   -----------------------------------------------------------------------------------------------------------------------
+   VV   | 12,858,772   | 3,622,124      | -25.9861  | 23.6239   | -9.7802 | 2.0658 | -17.9479        | -3.7664          | [0.0, 1.0]
+   VH   | 12,858,772   | 3,622,124      | -40.3134  | 17.0384   | -16.8882 | 2.1503 | -25.9821        | -12.7202         | [0.0, 1.0]
+
+5. SENTINEL-2 BAND STATISTICS & NORMALIZATION PARAMETERS:
+   Band | Valid Pixels | Invalid Pixels | Min Value | Max Value | Mean | Std | 1st Pct (Lower) | 99th Pct (Upper) | Norm Range
+   -----------------------------------------------------------------------------------------------------------------------
+   B2   | 12,858,772   | 3,622,124      | 203.0000  | 5164.0000 | 695.5863 | 250.2132 | 327.0000        | 1380.0000        | [0.0, 1.0]
+   B3   | 12,858,772   | 3,622,124      | 289.0000  | 5219.3333 | 1007.2944 | 291.3804 | 567.0000        | 1784.0000        | [0.0, 1.0]
+   B4   | 12,858,772   | 3,622,124      | 205.0000  | 5752.0000 | 1246.4948 | 520.7658 | 422.5000        | 2399.0000        | [0.0, 1.0]
+   B8   | 12,858,772   | 3,622,124      | 159.5000  | 6100.0000 | 2656.8107 | 494.3377 | 725.5000        | 3616.0000        | [0.0, 1.0]
+   B11  | 12,858,772   | 3,622,124      | 128.0000  | 7687.1667 | 2985.0893 | 933.7919 | 604.0000        | 4912.5000        | [0.0, 1.0]
+   B12  | 12,858,772   | 3,622,124      | 94.0000   | 9952.5000 | 2158.3211 | 850.3484 | 393.0000        | 3941.0000        | [0.0, 1.0]
+
+6. SUMMARY & METHODOLOGY:
+   - Detect NaNs and infinite values across all bands.
+   - Exclude invalid background/nodata pixels from percentiles and statistics calculation.
+   - Apply 1st and 99th percentile clipping to eliminate outliers and extreme values.
+   - Min-Max normalization applied: normalized = (clipped - p1) / (p99 - p1).
+   - Excluded invalid pixels retained as 0.0 in processed arrays and 0 in binary mask.
+   - Spatial metadata (CRS EPSG:4326, Transform, Dimensions 4112x4008, Band Descriptions) fully preserved.
+
+===============================================================================

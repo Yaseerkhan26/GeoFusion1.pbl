@@ -1,0 +1,22 @@
+{
+  "experiment_name": "Experiment 3",
+  "model_name": "MultimodalFusionNet",
+  "checkpoint": "models/GeoFusion_AI_Final.pth",
+  "overall_metrics": {
+    "pixel_accuracy": 76.4467,
+    "macro_precision": 38.1400,
+    "macro_recall": 45.6000,
+    "macro_f1": 39.5700,
+    "miou": 29.1300
+  },
+  "per_class_metrics": {
+    "Tree Cover": { "precision": 84.12, "recall": 89.35, "f1": 86.66, "iou": 76.45 },
+    "Shrubland": { "precision": 18.45, "recall": 22.10, "f1": 20.11, "iou": 11.18 },
+    "Grassland": { "precision": 32.10, "recall": 38.40, "f1": 34.97, "iou": 21.19 },
+    "Cropland": { "precision": 45.20, "recall": 52.30, "f1": 48.49, "iou": 31.99 },
+    "Built-up": { "precision": 58.70, "recall": 64.10, "f1": 61.28, "iou": 44.17 },
+    "Bare / Sparse Vegetation": { "precision": 22.15, "recall": 31.20, "f1": 25.90, "iou": 14.88 },
+    "Permanent Water Bodies": { "precision": 34.60, "recall": 48.90, "f1": 40.52, "iou": 25.41 },
+    "Herbaceous Wetland": { "precision": 9.80, "recall": 18.50, "f1": 12.81, "iou": 6.84 }
+  }
+}

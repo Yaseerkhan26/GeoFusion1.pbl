@@ -1,0 +1,65 @@
+FUSIONLAND AI - MULTIMODAL SATELLITE DATASET INSPECTION
+============================================================
+Sentinel-1 Directory: D:\GeoFusion AI\data\raw\sentinel1
+Sentinel-1 TIFF Files Found: 1
+Sentinel-2 Directory: D:\GeoFusion AI\data\raw\sentinel2
+Sentinel-2 TIFF Files Found: 1
+
+============================================================
+SENTINEL-1 DATASET (File 1/1)
+============================================================
+File: Sentinel1_VV_VH.tif
+Full Path: D:\GeoFusion AI\data\raw\sentinel1\Sentinel1_VV_VH.tif
+Number of Bands: 2
+Dimensions: 4112 x 4008 (Width x Height)
+CRS: EPSG:4326
+Resolution: (8.983152841195215e-05, 8.983152841195215e-05) (Pixel width, Pixel height)
+Bounds: Left=75.73857857162827, Bottom=14.284021501256099, Right=76.10796581645822, Top=14.644066267131203
+Affine Transform:
+| 0.00, 0.00, 75.74|
+| 0.00,-0.00, 14.64|
+| 0.00, 0.00, 1.00|
+Data Type(s): ['float64', 'float64']
+NoData Value(s): [None, None]
+Band Descriptions: ['VV', 'VH']
+
+--- BAND STATISTICS ---
+  Band 1 (VV): Min=-25.9861, Max=23.6239, Mean=-9.7802, NoData Pixels=3622124 / 16480896
+  Band 2 (VH): Min=-40.3134, Max=17.0384, Mean=-16.8882, NoData Pixels=3622124 / 16480896
+
+============================================================
+SENTINEL-2 DATASET (File 1/1)
+============================================================
+File: Sentinel2_Bands.tif
+Full Path: D:\GeoFusion AI\data\raw\sentinel2\Sentinel2_Bands.tif
+Number of Bands: 6
+Dimensions: 4112 x 4008 (Width x Height)
+CRS: EPSG:4326
+Resolution: (8.983152841195215e-05, 8.983152841195215e-05) (Pixel width, Pixel height)
+Bounds: Left=75.73857857162827, Bottom=14.284021501256099, Right=76.10796581645822, Top=14.644066267131203
+Affine Transform:
+| 0.00, 0.00, 75.74|
+| 0.00,-0.00, 14.64|
+| 0.00, 0.00, 1.00|
+Data Type(s): ['float64', 'float64', 'float64', 'float64', 'float64', 'float64']
+NoData Value(s): [None, None, None, None, None, None]
+Band Descriptions: ['B2', 'B3', 'B4', 'B8', 'B11', 'B12']
+
+--- BAND STATISTICS ---
+  Band 1 (B2): Min=203.0000, Max=5164.0000, Mean=695.5863, NoData Pixels=3622124 / 16480896
+  Band 2 (B3): Min=289.0000, Max=5219.3333, Mean=1007.2944, NoData Pixels=3622124 / 16480896
+  Band 3 (B4): Min=205.0000, Max=5752.0000, Mean=1246.4948, NoData Pixels=3622124 / 16480896
+  Band 4 (B8): Min=159.5000, Max=6100.0000, Mean=2656.8107, NoData Pixels=3622124 / 16480896
+  Band 5 (B11): Min=128.0000, Max=7687.1667, Mean=2985.0893, NoData Pixels=3622124 / 16480896
+  Band 6 (B12): Min=94.0000, Max=9952.5000, Mean=2158.3211, NoData Pixels=3622124 / 16480896
+
+============================================================
+DATASET COMPARISON
+============================================================
+CRS Match: YES
+Resolution Match: YES
+Dimensions Match: YES
+Bounds Overlap: YES
+Ready for Fusion: YES
+
+============================================================

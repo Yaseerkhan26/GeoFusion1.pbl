@@ -107,7 +107,7 @@ def run_colab_fusion_training(epochs=EPOCHS, batch_size=BATCH_SIZE):
         class_weights=class_weights_tensor
     )
 
-    checkpoint_name = "fusion_colab_best.pth"
+    checkpoint_name = "GeoFusion_AI_Final.pth"
 
     print("\n" + "=" * 52)
     print(f"=== TRAINING FUSION MODEL FOR {epochs} EPOCHS (SELECTING BY VAL mIoU) ===")

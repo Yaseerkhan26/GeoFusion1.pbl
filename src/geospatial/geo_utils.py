@@ -14,6 +14,8 @@ import rasterio
 from rasterio.enums import Resampling
 from rasterio.windows import Window
 
+from src.utils.config import CLASS_COLORMAP
+
 # Default data paths
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 RAW_S1_PATH = BASE_DIR / "data" / "raw" / "sentinel1" / "Sentinel1_VV_VH.tif"
@@ -21,6 +23,30 @@ RAW_S2_PATH = BASE_DIR / "data" / "raw" / "sentinel2" / "Sentinel2_Bands.tif"
 PROCESSED_S1_PATH = BASE_DIR / "data" / "processed" / "sentinel1" / "sentinel1_processed.tif"
 PROCESSED_S2_PATH = BASE_DIR / "data" / "processed" / "sentinel2" / "sentinel2_processed.tif"
 PROCESSED_LABELS_PATH = BASE_DIR / "data" / "processed" / "labels" / "worldcover_labels.tif"
+
+
+def hex_to_rgb(hex_str: str) -> Tuple[int, int, int]:
+    """Converts hex color string to (R, G, B) tuple of ints in [0, 255]."""
+    hex_str = hex_str.lstrip('#')
+    return tuple(int(hex_str[i:i+2], 16) for i in (0, 2, 4))
+
+
+def colorize_mask(mask: np.ndarray, colormap: Optional[Dict[int, str]] = None) -> np.ndarray:
+    """
+    Renders a 2D categorical mask array (H, W) into an RGB image array (H, W, 3) in uint8 [0, 255].
+    Preserves sharp integer boundaries without interpolation blurring.
+    """
+    if colormap is None:
+        colormap = CLASS_COLORMAP
+
+    h, w = mask.shape
+    rgb = np.zeros((h, w, 3), dtype=np.uint8)
+    for class_idx, hex_color in colormap.items():
+        r, g, b = hex_to_rgb(hex_color)
+        match = (mask == class_idx)
+        rgb[match] = [r, g, b]
+    return rgb
+
 
 
 def get_raster_metadata(filepath: Union[str, Path]) -> Dict[str, Any]:
